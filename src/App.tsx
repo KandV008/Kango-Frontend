@@ -1,17 +1,16 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import DashboardList from "./components/containers/DashboardList";
-import Header from "./components/containers/Header";
-import SideBar from "./components/containers/SideBar";
+import Home from "./pages/home";
+import DashboardPage from "./pages/dashboard";
 
 function App() {
   return (
-    <main className="flex flex-row">
-      <SideBar />
-      <div className="flex flex-col w-full">
-        <Header />
-        <DashboardList />
-      </div>
-    </main>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/:id" element={<DashboardPage />} />
+      </Routes>
+    </Router>
   );
 }
 
