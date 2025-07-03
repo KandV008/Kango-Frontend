@@ -1,7 +1,7 @@
 import type { TagEntity } from "@/model/tag/tag";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { InputColor } from "../containers/InputColor";
+import { InputColor } from "../inputs/InputColor";
 
 interface componentProps {
   tag?: TagEntity;
