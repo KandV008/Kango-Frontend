@@ -34,7 +34,7 @@ interface componentProps {
 function Tag({ tag }: componentProps) {
   const tagColor = getDataColor(tag.color ? tag.color : "BLACK");
 
-  const deleteDashboardACtion = async () => {
+  const deleteTagAction = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/tags/${tag.id}`, {
         method: "DELETE",
@@ -105,7 +105,7 @@ function Tag({ tag }: componentProps) {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={deleteDashboardACtion}>
+              <AlertDialogAction onClick={deleteTagAction}>
                 Continue
               </AlertDialogAction>
             </AlertDialogFooter>

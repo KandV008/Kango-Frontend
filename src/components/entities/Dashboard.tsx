@@ -13,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const items = [
   {
@@ -65,7 +66,11 @@ function Dashboard({ dashboard }: componentProps) {
     },
   ];
 
-  const readDashboardAction = () => {};
+  const navigate = useNavigate();
+
+  const readDashboardAction = () => {
+    navigate(`/${dashboard.id}`);
+  };
 
   const deleteDashboardACtion = async () => {
     try {
