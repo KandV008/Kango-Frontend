@@ -1,26 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CardEntity } from "../card/card";
-import { DashboardEntity } from "../dashboard/dashboard";
 
 export class TableEntity {
     id: number;
     name: string;
     position: number;
     cardList: CardEntity[];
-    dashboard: DashboardEntity | null;
+    dashboard: number;
 
     constructor(
         id?: number,
         name?: string,
         position?: number,
         cardList?: CardEntity[],
-        dashboard?: DashboardEntity,
+        dashboard?: number,
     ) {
         this.id = id ?? -1;
         this.name = name ?? '';
         this.position = position ?? -1;
         this.cardList = cardList ?? [];
-        this.dashboard = dashboard ?? null;
+        this.dashboard = dashboard ?? -1;
     }
 
         static fromJSON(json: any): TableEntity {
@@ -29,7 +28,7 @@ export class TableEntity {
             json.name,
             json.position,
             json.cardList?.map((c: any) => CardEntity.fromJSON ? CardEntity.fromJSON(c) : c) ?? [],
-            json.dashboard ? (DashboardEntity.fromJSON ? DashboardEntity.fromJSON(json.dashboard) : json.dashboard) : null,
+            json.dashboard,
         );
     }
 }

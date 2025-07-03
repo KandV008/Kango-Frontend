@@ -8,20 +8,20 @@ export class TagEntity {
   label: string;
   color: Color | null;
   visibility: Visibility;
-  dashboard: DashboardEntity;
+  dashboard: number;
 
   constructor(
     id?: number,
     label?: string,
     color?: Color,
     visibility?: Visibility,
-    dashboard?: DashboardEntity
+    dashboard?: number
   ) {
     this.id = id ?? 0;
     this.label = label ?? '';
     this.color = color ?? null;
     this.visibility = visibility ?? "LOCAL";
-    this.dashboard = dashboard ?? ({} as DashboardEntity);
+    this.dashboard = dashboard ?? -1;
   }
 
   static fromJSON(json: any): TagEntity {

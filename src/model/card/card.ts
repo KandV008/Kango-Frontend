@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DashboardEntity } from "../dashboard/dashboard";
 import type { CardType } from "../enums/cardType";
-import { TableEntity } from "../table/table";
 import { TagEntity } from "../tag/tag";
 import type { AttachedFile } from "../utils/attachedFile";
 import type { Check } from "../utils/check";
@@ -18,8 +16,8 @@ export class CardEntity {
   deadLine: Date;
   checks: Check[];
   tagList: TagEntity[];
-  table: TableEntity;
-  dashboard: DashboardEntity;
+  table: number;
+  dashboard: number;
 
   constructor(
     id?: number,
@@ -32,8 +30,8 @@ export class CardEntity {
     deadLine?: Date,
     checks?: Check[],
     tagList?: TagEntity[],
-    table?: TableEntity,
-    dashboard?: DashboardEntity
+    table?: number,
+    dashboard?: number
   ) {
     this.id = id ?? 0;
     this.title = title ?? '';
@@ -45,8 +43,8 @@ export class CardEntity {
     this.deadLine = deadLine ?? new Date();
     this.checks = checks ?? [];
     this.tagList = tagList ?? [];
-    this.table = table ?? ({} as TableEntity);
-    this.dashboard = dashboard ?? ({} as DashboardEntity);
+    this.table = table ?? -1;
+    this.dashboard = dashboard ?? -1;
   }
 
   static fromJSON(json: any): CardEntity {
@@ -61,8 +59,8 @@ export class CardEntity {
       json.deadLine ? new Date(json.deadLine) : new Date(),
       json.checks ?? [],        
       json.tagList?.map((t: any) => TagEntity.fromJSON ? TagEntity.fromJSON(t) : t) ?? [],
-      json.table ? (TableEntity.fromJSON ? TableEntity.fromJSON(json.table) : json.table) : ({} as TableEntity),
-      json.dashboard ? (DashboardEntity.fromJSON ? DashboardEntity.fromJSON(json.dashboard) : json.dashboard) : ({} as DashboardEntity),
+      json.table,
+      json.dashboard,
     );
   }
 }

@@ -1,11 +1,6 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 
-
-
 export function InputSort() {
-  //const [open, setOpen] = React.useState(false);
-  //const [value, setValue] = React.useState(color ? color : "");
-  
   return (
     <Select name="sortType">
       <SelectTrigger className="w-[180px]">

@@ -33,12 +33,19 @@ import CardForm from "../forms/cardForm";
 import createCard from "@/lib/forms/card/createCard";
 import { Input } from "../ui/input";
 import { InputSort } from "../inputs/InputSort";
+import { DropZone } from "../inputs/DropZone";
+import { useEffect } from "react";
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import updateCardPosition from "@/lib/forms/table/updateCardPositionFromTable";
+import moveCardFormTableToAnotherTable from "@/lib/forms/table/moveCardFromTableToAnotherTable";
 
 interface componentProps {
   table: TableEntity;
 }
 
 function Table({ table }: componentProps) {
+  const cardList = [...table.cardList].sort((a, b) => a.position - b.position);
+  
   const deleteTableAction = async () => {
     try {
       const response = await fetch(
@@ -61,11 +68,13 @@ function Table({ table }: componentProps) {
 
   const sortCardListAction = async (formData: FormData) => {
     const sort = formData.get("sortType")?.toString();
-    console.log("SORT", sort)
+    console.log("SORT", sort);
 
     try {
       const response = await fetch(
-      `http://localhost:8080/api/tables/${table.id}/sort?sort=${encodeURIComponent(sort || "")}`,
+        `http://localhost:8080/api/tables/${
+          table.id
+        }/sort?sort=${encodeURIComponent(sort || "")}`,
         {
           method: "PUT",
           headers: {
@@ -86,6 +95,51 @@ function Table({ table }: componentProps) {
       toast.error("Error sorting card list. Please try again.");
     }
   };
+
+  /* Drag & Drop Logic */
+  useEffect(() => {
+    return monitorForElements({
+      async onDrop({ source, location }) {
+        const destination = location.current.dropTargets[0];
+        if (!destination) {
+          return;
+        }
+
+        const destinyTableId = Number(destination.data.table);
+        const destinyTableZone = Number(destination.data.zone);
+
+        const originTableId = Number(source.data.table);
+        const cardPosition = Number(source.data.position);
+        const cardId = Number(source.data.card);
+
+        console.log(
+          "DESTINY TABLE:",destinyTableId,
+          "DESTINY ZONE:",destinyTableZone,
+          "ORIGIN TABLE:",originTableId,
+          "CARD POSITION:",cardPosition,
+          "CARD ID:",cardId
+        );
+
+        if (destinyTableId === originTableId) {
+          const isNotNecessaryToMove =
+            destinyTableZone === cardPosition ||
+            destinyTableZone === cardPosition;
+
+          if (isNotNecessaryToMove) {
+            return;
+          }
+
+          const newPosition = (cardPosition - destinyTableZone < 0) ? destinyTableZone - 1 : destinyTableZone;
+          console.log("NEW POSITION", newPosition)
+          await updateCardPosition(destinyTableId, cardId, newPosition);
+          return;
+        }
+
+        console.log("XDs")
+        await moveCardFormTableToAnotherTable(originTableId, cardId, destinyTableId, destinyTableZone)
+      },
+    });
+  }, []);
 
   return (
     <article className="flex flex-col items-start h-full gap-2 px-2 py-1 border-2 border-black rounded-b-md w-80 rounded-t-2xl">
@@ -140,7 +194,6 @@ function Table({ table }: componentProps) {
                   </form>
                 </PopoverContent>
               </Popover>
-
               {/* Move Card List */}
               <div>[...]</div>
               {/* Copy Card List */}
@@ -177,6 +230,7 @@ function Table({ table }: componentProps) {
       </section>
       {/* CardList */}
       <section className="flex flex-col justify-start w-full h-full gap-3">
+        {/* Action Add Card */}
         <article className="grid justify-end w-full">
           <Dialog>
             <DialogTrigger asChild>
@@ -205,9 +259,14 @@ function Table({ table }: componentProps) {
             </DialogContent>{" "}
           </Dialog>
         </article>
+        {/* All Cards */}
         <article className="grid gap-2">
-          {table.cardList.map((card) => (
-            <Card card={card} />
+          <DropZone zone={0} table={table.id} />
+          {cardList.map((card) => (
+            <div className="grid gap-2" key={"card-" + card.id}>
+              <Card card={card} />
+              <DropZone zone={card.position + 1} table={table.id} />
+            </div>
           ))}
         </article>
       </section>

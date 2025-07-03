@@ -24,6 +24,9 @@ import {
 } from "../ui/dialog";
 import { getDataColor } from "@/model/utils/color";
 import type { CardEntity } from "@/model/card/card";
+import { useEffect, useRef, useState } from "react";
+import invariant from "tiny-invariant";
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
 interface componentProps {
   card: CardEntity;
@@ -34,9 +37,12 @@ function Card({ card }: componentProps) {
 
   const deleteDashboardACtion = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/cards/${card.id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/cards/${card.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to delete card (status: ${response.status})`);
@@ -49,8 +55,35 @@ function Card({ card }: componentProps) {
     }
   };
 
+  /* Drag & Drop Logic */
+  const ref = useRef(null);
+  const [dragging, setDragging] = useState<boolean>(false);
+
+  //console.log("CARD", card)
+  const position = card.position
+  const tableId = card.table
+  const cardId = card.id
+
+  useEffect(() => {
+    const el = ref.current;
+    invariant(el);
+
+    return draggable({
+      element: el,
+      getInitialData: () => ({ position, table: tableId, card: cardId }),
+      onDragStart: () => setDragging(true),
+      onDrop: () => setDragging(false),
+    });
+  }, [cardId, position, tableId]);
+
+  const baseCardStyle =
+    "flex flex-row items-start justify-between w-full gap-2 p-4 m-auto border-2 rounded-2xl";
+  const dragCardStyle = dragging
+    ? "border-gray-700 bg-gray-200 text-gray-600"
+    : "border-black text-black";
+
   return (
-    <article className="flex flex-row items-start justify-between w-full gap-2 p-4 m-auto border-2 border-black rounded-2xl">
+    <article className={`${baseCardStyle} ${dragCardStyle}`} ref={ref}>
       {/* Info */}
       <section className="flex flex-row items-center gap-2 size-full">
         <div
@@ -69,7 +102,7 @@ function Card({ card }: componentProps) {
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
-            <form  className="grid gap-5">
+            <form className="grid gap-5">
               <DialogHeader>
                 <DialogTitle>Update Card</DialogTitle>
                 <DialogDescription>

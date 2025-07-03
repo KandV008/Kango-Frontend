@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 
 function DashboardPage() {
   const { id } = useParams();
-  console.log(id);
 
   const [dashboard, setDashboard] = useState<DashboardEntity | null>(null);
   const [isLoading, setLoading] = useState<boolean>(true)
@@ -26,8 +25,10 @@ function DashboardPage() {
         }
 
         const data = await response.json();
-        console.log("DASHBOARD", data);
         const mappedDashboard = DashboardEntity.fromJSON(data);
+        //console.log("DASHBOARD", mappedDashboard);
+        //console.log("TABLE", mappedDashboard.tableList);
+
         setDashboard(mappedDashboard);
         setLoading(false)
       } catch (err) {
