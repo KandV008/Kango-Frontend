@@ -11,7 +11,7 @@ function TableList({ tables }: componentProps) {
   return (
     <section className="flex flex-row items-center justify-start gap-5 p-5 size-full ">
       {
-        tables.map(table => <Table table={table} key={table.id}/>)
+        tables.map(table => <Table table={table} key={table.id} tables={tables}/>)
       }
     </section>
   );

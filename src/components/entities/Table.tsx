@@ -38,14 +38,19 @@ import { useEffect } from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import updateCardPosition from "@/lib/forms/table/updateCardPositionFromTable";
 import moveCardFormTableToAnotherTable from "@/lib/forms/table/moveCardFromTableToAnotherTable";
+import { InputTable } from "../inputs/InputTable";
+import moveCardListFromTableToAnotherTable from "@/lib/forms/table/moveCardListFromTableToAnotherTable";
+import copyCardListFromTableToAnotherTable from "@/lib/forms/table/copyCardListFromTableToAnotherTable";
 
 interface componentProps {
   table: TableEntity;
+  tables: TableEntity[];
 }
 
-function Table({ table }: componentProps) {
+function Table({ table, tables }: componentProps) {
   const cardList = [...table.cardList].sort((a, b) => a.position - b.position);
-  
+  const otherTables = [...tables].filter((a) => a.id !== table.id);
+
   const deleteTableAction = async () => {
     try {
       const response = await fetch(
@@ -113,11 +118,16 @@ function Table({ table }: componentProps) {
         const cardId = Number(source.data.card);
 
         console.log(
-          "DESTINY TABLE:",destinyTableId,
-          "DESTINY ZONE:",destinyTableZone,
-          "ORIGIN TABLE:",originTableId,
-          "CARD POSITION:",cardPosition,
-          "CARD ID:",cardId
+          "DESTINY TABLE:",
+          destinyTableId,
+          "DESTINY ZONE:",
+          destinyTableZone,
+          "ORIGIN TABLE:",
+          originTableId,
+          "CARD POSITION:",
+          cardPosition,
+          "CARD ID:",
+          cardId
         );
 
         if (destinyTableId === originTableId) {
@@ -129,14 +139,21 @@ function Table({ table }: componentProps) {
             return;
           }
 
-          const newPosition = (cardPosition - destinyTableZone < 0) ? destinyTableZone - 1 : destinyTableZone;
-          console.log("NEW POSITION", newPosition)
+          const newPosition =
+            cardPosition - destinyTableZone < 0
+              ? destinyTableZone - 1
+              : destinyTableZone;
+          console.log("NEW POSITION", newPosition);
           await updateCardPosition(destinyTableId, cardId, newPosition);
           return;
         }
 
-        console.log("XDs")
-        await moveCardFormTableToAnotherTable(originTableId, cardId, destinyTableId, destinyTableZone)
+        await moveCardFormTableToAnotherTable(
+          originTableId,
+          cardId,
+          destinyTableId,
+          destinyTableZone
+        );
       },
     });
   }, []);
@@ -195,9 +212,65 @@ function Table({ table }: componentProps) {
                 </PopoverContent>
               </Popover>
               {/* Move Card List */}
-              <div>[...]</div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">Move Card List</Button>
+                </PopoverTrigger>
+                <PopoverContent side="right" className="w-80">
+                  <form action={moveCardListFromTableToAnotherTable}>
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium leading-none">
+                          Select the destination table
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Selet the table to move all of the cards associated to
+                          this table.
+                        </p>
+                      </div>
+                      <Input
+                        type="hidden"
+                        value={table.id}
+                        name="origin-table"
+                      ></Input>
+                      <div className="grid gap-2">
+                        <InputTable tables={otherTables} />
+                      </div>
+                      <Button type="submit">Apply</Button>
+                    </div>
+                  </form>
+                </PopoverContent>
+              </Popover>
               {/* Copy Card List */}
-              <div>[...]</div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">Copy Card List</Button>
+                </PopoverTrigger>
+                <PopoverContent side="right" className="w-80">
+                  <form action={copyCardListFromTableToAnotherTable}>
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium leading-none">
+                          Select the destination table
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Selet the table to copy all of the cards associated to
+                          this table.
+                        </p>
+                      </div>
+                      <Input
+                        type="hidden"
+                        value={table.id}
+                        name="origin-table"
+                      ></Input>
+                      <div className="grid gap-2">
+                        <InputTable tables={otherTables} />
+                      </div>
+                      <Button type="submit">Apply</Button>
+                    </div>
+                  </form>
+                </PopoverContent>
+              </Popover>{" "}
               <Separator />
               {/* Delete Table */}
               <AlertDialog>
