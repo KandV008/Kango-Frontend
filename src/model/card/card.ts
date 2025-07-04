@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CardType } from "../enums/cardType";
 import { TagEntity } from "../tag/tag";
-import type { AttachedFile } from "../utils/attachedFile";
+import type { AttachedFileProps } from "../utils/attachedFile";
 import type { Check } from "../utils/check";
 import type { Color } from "../utils/color";
 
@@ -12,7 +12,7 @@ export class CardEntity {
   cardType: CardType;
   color: Color | null;
   position: number;
-  attachedFiled: AttachedFile[];
+  attachedFiled: AttachedFileProps[];
   deadLine: Date;
   checks: Check[];
   tagList: TagEntity[];
@@ -26,7 +26,7 @@ export class CardEntity {
     cardType?: CardType,
     color?: Color,
     position?: number,
-    attachedFiled?: AttachedFile[],
+    attachedFiled?: AttachedFileProps[],
     deadLine?: Date,
     checks?: Check[],
     tagList?: TagEntity[],

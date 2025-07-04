@@ -1,7 +1,6 @@
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 
-
 function CardForm() {
     return (
     <div className="grid gap-4">

@@ -1,5 +1,5 @@
 
-export interface AttachedFile {
-  fileName: string;
-  fileUrl: string;
+export interface AttachedFileProps {
+  fileName?: string;
+  fileUrl?: string;
 }
