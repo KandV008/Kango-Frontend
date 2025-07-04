@@ -2,7 +2,7 @@ import type { CardDTO } from "@/model/card/cardDTO";
 import { toast } from "sonner";
 
 export default async function createGlobalTemplateCard(formData: FormData) {
-    const tagDTO: CardDTO = {
+    const cardDTO: CardDTO = {
         title: formData.get("title")?.toString(),
         cardType: "GLOBAL_TEMPLATE",
     };
@@ -12,7 +12,7 @@ export default async function createGlobalTemplateCard(formData: FormData) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(tagDTO),
+        body: JSON.stringify(cardDTO),
     });
 
     if (!res.ok) {

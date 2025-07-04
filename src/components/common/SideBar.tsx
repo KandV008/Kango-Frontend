@@ -38,10 +38,11 @@ import createGlobalTag from "@/lib/forms/createGlobalTag";
 import TagForm from "../forms/tagForm";
 import CardForm from "../forms/cardForm";
 import createGlobalTemplateCard from "@/lib/forms/card/createGlobalTemplateCard";
-import CardList from "../containers/CardList";
+import TemplateCardList from "../containers/TemplateCardList";
 import TagList from "../containers/TagList";
 import { useParams } from "react-router-dom";
 import { Input } from "../ui/input";
+import createLocalTemplateCard from "@/lib/forms/card/createLocalTemplateCard";
 
 function SideBar() {
   const { id } = useParams();
@@ -132,7 +133,7 @@ function SideBar() {
                         )}
                         <DialogContent className="sm:max-w-[425px]">
                           <form
-                            action={createGlobalTemplateCard}
+                            action={createLocalTemplateCard}
                             className="grid gap-5"
                           >
                             <Input
@@ -179,7 +180,7 @@ function SideBar() {
                               with the posibility to update or delete them.
                             </DialogDescription>
                           </DialogHeader>
-                          <CardList />
+                          <TemplateCardList dashboardId={id} />
                         </DialogContent>
                       </Dialog>
                     </SidebarGroupContent>
