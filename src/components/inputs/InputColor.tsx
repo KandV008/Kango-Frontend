@@ -25,7 +25,7 @@ interface componentProps {
 export function InputColor({ color }: componentProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(color ? color : "");
-  console.log("?", color)
+  
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Input type="hidden" value={value} name="color" />

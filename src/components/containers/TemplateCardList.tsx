@@ -56,10 +56,10 @@ function TemplateCardList({ dashboardId }: componentProps) {
   return (
     <section className="flex flex-col flex-wrap items-center justify-center gap-5 px-5 size-full ">
       {globalCardList.map((card) => (
-        <Card card={card} />
+        <Card card={card} key={"global-template-card-" + card.id}/>
       ))}
       {localCardList.map((card) => (
-        <Card card={card} />
+        <Card card={card} key={"local-template-card-" + card.id}/>
       ))}
     </section>
   );

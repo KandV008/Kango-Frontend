@@ -24,7 +24,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import TagForm from "../forms/tagForm";
-import updateTag from "@/lib/forms/updateTag";
+import updateTag from "@/lib/forms/tag/updateTag";
 import { getDataColor } from "@/model/utils/color";
 
 interface componentProps {

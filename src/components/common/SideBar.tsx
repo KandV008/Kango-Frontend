@@ -34,7 +34,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import createGlobalTag from "@/lib/forms/createGlobalTag";
+import createGlobalTag from "@/lib/forms/tag/createGlobalTag";
 import TagForm from "../forms/tagForm";
 import CardForm from "../forms/cardForm";
 import createGlobalTemplateCard from "@/lib/forms/card/createGlobalTemplateCard";
@@ -43,6 +43,7 @@ import TagList from "../containers/TagList";
 import { useParams } from "react-router-dom";
 import { Input } from "../ui/input";
 import createLocalTemplateCard from "@/lib/forms/card/createLocalTemplateCard";
+import createLocalTag from "@/lib/forms/tag/createLocalTag";
 
 function SideBar() {
   const { id } = useParams();
@@ -239,7 +240,7 @@ function SideBar() {
                           <></>
                         )}
                         <DialogContent className="sm:max-w-[425px]">
-                          <form action={createGlobalTag} className="grid gap-5">
+                          <form action={createLocalTag} className="grid gap-5">
                             <Input
                               type="hidden"
                               value={id}
@@ -279,7 +280,7 @@ function SideBar() {
                               posibility to update or delete them.
                             </DialogDescription>
                           </DialogHeader>
-                          <TagList />
+                          <TagList dashboardId={id} />
                         </DialogContent>
                       </Dialog>
                     </SidebarGroupContent>
