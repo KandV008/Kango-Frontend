@@ -41,6 +41,7 @@ import moveCardFormTableToAnotherTable from "@/lib/forms/table/moveCardFromTable
 import { InputTable } from "../inputs/InputTable";
 import moveCardListFromTableToAnotherTable from "@/lib/forms/table/moveCardListFromTableToAnotherTable";
 import copyCardListFromTableToAnotherTable from "@/lib/forms/table/copyCardListFromTableToAnotherTable";
+import { InputCardTemplate } from "../inputs/InputCardTemplate";
 
 interface componentProps {
   table: TableEntity;
@@ -322,10 +323,23 @@ function Table({ table, tables }: componentProps) {
                   </DialogDescription>
                 </DialogHeader>
                 <CardForm />
+                {/* Footer */}
                 <DialogFooter>
+                  {/* Use a Template */}
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button>Use a template</Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="grid gap-2 w-fit">
+                      <Label>Select a template to use:</Label>
+                      <InputCardTemplate dashboardId={table.dashboard.toString()} tableId={table.id.toString()}/>
+                    </PopoverContent>
+                  </Popover>
+                  {/* Cancel Action */}
                   <DialogClose asChild>
                     <Button variant="outline">Cancel</Button>
                   </DialogClose>
+                  {/* Create Card */}
                   <Button type="submit">Create Card</Button>
                 </DialogFooter>
               </form>
