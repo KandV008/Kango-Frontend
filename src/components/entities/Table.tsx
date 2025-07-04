@@ -34,7 +34,7 @@ import createCard from "@/lib/forms/card/createCard";
 import { Input } from "../ui/input";
 import { InputSort } from "../inputs/InputSort";
 import { DropZone } from "../inputs/DropZone";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import updateCardPosition from "@/lib/forms/table/updateCardPositionFromTable";
 import moveCardFormTableToAnotherTable from "@/lib/forms/table/moveCardFromTableToAnotherTable";
@@ -42,6 +42,8 @@ import { InputTable } from "../inputs/InputTable";
 import moveCardListFromTableToAnotherTable from "@/lib/forms/table/moveCardListFromTableToAnotherTable";
 import copyCardListFromTableToAnotherTable from "@/lib/forms/table/copyCardListFromTableToAnotherTable";
 import { InputCardTemplate } from "../inputs/InputCardTemplate";
+import invariant from "tiny-invariant";
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
 interface componentProps {
   table: TableEntity;
@@ -102,7 +104,7 @@ function Table({ table, tables }: componentProps) {
     }
   };
 
-  /* Drag & Drop Logic */
+  /* Monitoring Drag & Drop Logic */
   useEffect(() => {
     return monitorForElements({
       async onDrop({ source, location }) {
@@ -111,7 +113,17 @@ function Table({ table, tables }: componentProps) {
           return;
         }
 
-        const destinyTableId = Number(destination.data.table);
+        const typeDropZone = destination.data.type;
+        const typeElement = source.data.type;
+
+        console.log("TYPE", typeDropZone)
+        console.log("ELEMENT", typeElement)
+
+        if (typeElement !== "CARD" || typeElement !== typeDropZone) {
+          return;
+        }
+
+        const destinyTableId = Number(destination.data.destination);
         const destinyTableZone = Number(destination.data.zone);
 
         const originTableId = Number(source.data.table);
@@ -159,8 +171,40 @@ function Table({ table, tables }: componentProps) {
     });
   }, []);
 
+  /* Drag Logic */
+  const ref = useRef(null);
+  const [dragging, setDragging] = useState<boolean>(false);
+
+  //console.log("CARD", card)
+  const position = table.position;
+  const dashboardId = table.dashboard;
+  const tableId = table.id;
+
+  useEffect(() => {
+    const el = ref.current;
+    invariant(el);
+
+    return draggable({
+      element: el,
+      getInitialData: () => ({
+        position,
+        dashboard: dashboardId,
+        table: tableId,
+        type: "TABLE",
+      }),
+      onDragStart: () => setDragging(true),
+      onDrop: () => setDragging(false),
+    });
+  }, [tableId, position, dashboardId]);
+
+  const baseCardStyle =
+    "flex flex-col items-start h-full gap-2 px-2 py-1 border-2 rounded-b-md w-80 rounded-t-2xl";
+  const dragCardStyle = dragging
+    ? "border-gray-700 bg-gray-200 text-gray-600"
+    : "border-black text-black";
+
   return (
-    <article className="flex flex-col items-start h-full gap-2 px-2 py-1 border-2 border-black rounded-b-md w-80 rounded-t-2xl">
+    <article className={`${baseCardStyle} ${dragCardStyle}`} ref={ref}>
       {/* Header */}
       <section className="flex flex-row items-center justify-between w-full gap-2 p-2 border-b-2 border-black h-fit">
         <Label>{table.name}</Label>
@@ -332,7 +376,10 @@ function Table({ table, tables }: componentProps) {
                     </PopoverTrigger>
                     <PopoverContent className="grid gap-2 w-fit">
                       <Label>Select a template to use:</Label>
-                      <InputCardTemplate dashboardId={table.dashboard.toString()} tableId={table.id.toString()}/>
+                      <InputCardTemplate
+                        dashboardId={table.dashboard.toString()}
+                        tableId={table.id.toString()}
+                      />
                     </PopoverContent>
                   </Popover>
                   {/* Cancel Action */}
@@ -348,11 +395,15 @@ function Table({ table, tables }: componentProps) {
         </article>
         {/* All Cards */}
         <article className="grid gap-2">
-          <DropZone zone={0} table={table.id} />
+          <DropZone zone={0} destination={table.id} type={"CARD"} />
           {cardList.map((card) => (
             <div className="grid gap-2" key={"card-" + card.id}>
               <Card card={card} />
-              <DropZone zone={card.position + 1} table={table.id} />
+              <DropZone
+                zone={card.position + 1}
+                destination={table.id}
+                type={"CARD"}
+              />
             </div>
           ))}
         </article>

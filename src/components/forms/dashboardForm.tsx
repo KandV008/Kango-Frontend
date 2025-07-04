@@ -2,7 +2,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Upload } from "lucide-react";
-import createDashboard from "@/lib/forms/createDashboard";
+import createDashboard from "@/lib/forms/dashboard/createDashboard";
 
 function DashboardForm() {
   return (

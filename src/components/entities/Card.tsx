@@ -55,7 +55,7 @@ function Card({ card }: componentProps) {
     }
   };
 
-  /* Drag & Drop Logic */
+  /* Drag Logic */
   const ref = useRef(null);
   const [dragging, setDragging] = useState<boolean>(false);
 
@@ -70,7 +70,7 @@ function Card({ card }: componentProps) {
 
     return draggable({
       element: el,
-      getInitialData: () => ({ position, table: tableId, card: cardId }),
+      getInitialData: () => ({ position, table: tableId, card: cardId, type: "CARD" }),
       onDragStart: () => setDragging(true),
       onDrop: () => setDragging(false),
     });

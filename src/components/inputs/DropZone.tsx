@@ -4,13 +4,16 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 
 interface componentProps{
     zone: number,
-    table: number,
+    destination: number,
+    type: "CARD" | "TABLE",
 }
 
-export function DropZone({ zone, table }: componentProps) {
+type HoveredState = 'idle' | 'validMove' | 'invalidMove';
+
+export function DropZone({ zone, destination, type }: componentProps) {
   /* Drag & Drop Logic */
   const ref = useRef(null);
-  const [isDraggedOver, setIsDraggedOver] = useState(false);
+    const [state, setState] = useState<HoveredState>('idle');
 
   useEffect(() => {
     const el = ref.current;
@@ -18,14 +21,30 @@ export function DropZone({ zone, table }: componentProps) {
 
     return dropTargetForElements({
       element: el,
-      getData: () => ({ zone, table }),
-      onDragEnter: () => setIsDraggedOver(true),
-      onDragLeave: () => setIsDraggedOver(false),
-      onDrop: () => setIsDraggedOver(false),
+      getData: () => ({ zone, destination, type }),
+      onDragEnter: ({ source }) => {
+
+        if (source.data.type === type){
+          setState("validMove")
+        } else {
+          setState("invalidMove")
+        }
+      },
+      onDragLeave: () => setState('idle'),
+      onDrop: () => setState('idle'),
     });
-  }, [table, zone]);
+  }, [destination, type, zone]);
 
-  const dropZoneStyle = isDraggedOver ? "bg-blue-300" : "bg-transparent";
+  function getColor(currentState: HoveredState): string {
+    if (currentState === 'validMove') {
+        return 'bg-blue-300';
+    } else if (currentState === 'invalidMove') {
+        return 'bg-red-300';
+    }
+    return "bg-transparent";
+}
 
-  return <div ref={ref} className={`h-2 mx-5 ${dropZoneStyle}`}></div>;
+  const dropZoneSize = type === "CARD" ? "h-2 mx-5" : "w-5 my-5 h-full"
+
+  return <div ref={ref} className={`${dropZoneSize} ${getColor(state)}`}></div>;
 }
