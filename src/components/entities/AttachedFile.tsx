@@ -16,14 +16,18 @@ import type { AttachedFileProps } from "@/model/utils/attachedFile";
 
 interface componentProps {
   attachedFile: AttachedFileProps;
-  dashboardId: string;
+  dashboardId?: string;
+  cardId?: string;
+  mode?: "DASHBOARD" | "CARD";
 }
 
-function AttachedFile({ attachedFile, dashboardId }: componentProps) {
+function AttachedFile({ attachedFile, dashboardId, cardId, mode = "DASHBOARD"}: componentProps) {
   const dettachFileAction = async () => {
+    const actionId = mode === "DASHBOARD" ? dashboardId : cardId;
+    const entityRoute = mode === "DASHBOARD" ? "dashboards" : "cards";
     try {
       const response = await fetch(
-        `http://localhost:8080/api/dashboards/${dashboardId}/attached-files`,
+        `http://localhost:8080/api/${entityRoute}/${actionId}/attached-files`,
         {
           method: "DELETE",
           headers: {
