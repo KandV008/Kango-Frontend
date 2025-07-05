@@ -11,15 +11,12 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { toast } from "sonner";
-import { Pen, Trash } from "lucide-react";
+import { Eye, Trash } from "lucide-react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
 import { getDataColor } from "@/model/utils/color";
@@ -27,12 +24,21 @@ import type { CardEntity } from "@/model/card/card";
 import { useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import UpdateCardTitleForm from "../forms/card/updateCardTitleForm";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+import UpdateCardColorForm from "../forms/card/updateCardColorForm";
+import UpdateCardDescriptionForm from "../forms/card/updateCardDescriptionForm";
+import UpdateCardTagsForm from "../forms/card/updateCardTagsForm";
+import UpdateCardFileForm from "../forms/card/updateCardFilesForm";
+import UpdateCardCheckForm from "../forms/card/updateCardCheckForm";
+import { Separator } from "../ui/separator";
 
 interface componentProps {
   card: CardEntity;
+  dashboardId?: string;
 }
 
-function Card({ card }: componentProps) {
+function Card({ card, dashboardId }: componentProps) {
   const cardColor = getDataColor(card.color ? card.color : "BLACK");
 
   const deleteDashboardACtion = async () => {
@@ -60,9 +66,9 @@ function Card({ card }: componentProps) {
   const [dragging, setDragging] = useState<boolean>(false);
 
   //console.log("CARD", card)
-  const position = card.position
-  const tableId = card.table
-  const cardId = card.id
+  const position = card.position;
+  const tableId = card.table;
+  const cardId = card.id;
 
   useEffect(() => {
     const el = ref.current;
@@ -70,7 +76,12 @@ function Card({ card }: componentProps) {
 
     return draggable({
       element: el,
-      getInitialData: () => ({ position, table: tableId, card: cardId, type: "CARD" }),
+      getInitialData: () => ({
+        position,
+        table: tableId,
+        card: cardId,
+        type: "CARD",
+      }),
       onDragStart: () => setDragging(true),
       onDrop: () => setDragging(false),
     });
@@ -94,32 +105,62 @@ function Card({ card }: componentProps) {
       </section>
       {/* Actions */}
       <section className="flex flex-row gap-1">
-        {/* Update Tag */}
+        {/* See Card */}
         <Dialog>
           <DialogTrigger asChild>
             <Button>
-              <Pen />
+              <Eye />
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <form className="grid gap-5">
-              <DialogHeader>
-                <DialogTitle>Update Card</DialogTitle>
-                <DialogDescription>
-                  Update the attributes of the Card
-                </DialogDescription>
+          <DialogContent>
+            {/* Header */}
+            <DialogTitle>
+              <DialogHeader className="flex flex-row">
+                {/* Color */}
+                <UpdateCardColorForm card={card} />
+                {/* Base Info */}
+                <div className="flex flex-col items-center justify-around w-full ">
+                  {/* Title */}
+                  <UpdateCardTitleForm card={card} />
+                  {/* Card Type */}
+                  <h2>{card.cardType}</h2>
+                </div>
+                {/* Other Info */}
+                <div className="flex flex-col items-center justify-around w-full ">
+                  {/* Delete */}
+                  <div>TODO</div>
+                  {/* Card Type */}
+                  <h2>
+                    {card.deadLine ? (
+                      <>{card.deadLine.toISOString()}</>
+                    ) : (
+                      <em className="w-full text-center ">
+                        This Card doesn't have a deadline.
+                      </em>
+                    )}
+                  </h2>
+                </div>
               </DialogHeader>
-              TODO {/* TODO */}
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button type="submit">Update Card</Button>
-              </DialogFooter>
-            </form>
+            </DialogTitle>
+            <Separator />
+            {/* Body */}
+            <DialogDescription className="grid gap-2">
+              {/* Description */}
+              <UpdateCardDescriptionForm card={card} />
+              {/* Tags */}
+              <UpdateCardTagsForm card={card} dashboardId={dashboardId} />
+            </DialogDescription>
+            <Separator />
+            {/* Footer */}
+            <DialogFooter>
+              {/* Checks */}
+              <UpdateCardCheckForm card={card} />
+              {/* Attached Files */}
+              <UpdateCardFileForm card={card} />
+            </DialogFooter>
           </DialogContent>{" "}
         </Dialog>
-        {/* Delete Tag */}
+        {/* Delete Card */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button>
