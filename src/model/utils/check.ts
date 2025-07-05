@@ -1,6 +1,6 @@
 
-export interface Check {
-    label: string;
-    checked: boolean;
-    position: number;
+export interface CheckProps {
+    label?: string;
+    checked?: boolean;
+    position?: number;
 }

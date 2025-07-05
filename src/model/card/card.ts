@@ -2,7 +2,7 @@
 import type { CardType } from "../enums/cardType";
 import { TagEntity } from "../tag/tag";
 import type { AttachedFileProps } from "../utils/attachedFile";
-import type { Check } from "../utils/check";
+import type { CheckProps } from "../utils/check";
 import type { Color } from "../utils/color";
 
 export class CardEntity {
@@ -13,8 +13,8 @@ export class CardEntity {
   color: Color | null;
   position: number;
   attachedFiled: AttachedFileProps[];
-  deadLine: Date;
-  checks: Check[];
+  deadLine: Date | null;
+  checks: CheckProps[];
   tagList: TagEntity[];
   table: number;
   dashboard: number;
@@ -27,8 +27,8 @@ export class CardEntity {
     color?: Color,
     position?: number,
     attachedFiled?: AttachedFileProps[],
-    deadLine?: Date,
-    checks?: Check[],
+    deadLine?: Date | null,
+    checks?: CheckProps[],
     tagList?: TagEntity[],
     table?: number,
     dashboard?: number
@@ -40,7 +40,7 @@ export class CardEntity {
     this.color = color ?? null;
     this.position = position ?? 0;
     this.attachedFiled = attachedFiled ?? [];
-    this.deadLine = deadLine ?? new Date();
+    this.deadLine = deadLine ?? null;
     this.checks = checks ?? [];
     this.tagList = tagList ?? [];
     this.table = table ?? -1;
@@ -55,8 +55,8 @@ export class CardEntity {
       json.cardType,
       json.color ?? null,  
       json.position,
-      json.attachedFiled ?? [], 
-      json.deadLine ? new Date(json.deadLine) : new Date(),
+      json.attachedFiles?.map((t: any) => ({fileName: t.fileName, fileUrl: t.fileUrl})) ?? [], 
+      json.deadLine ? new Date(json.deadLine) : null,
       json.checks ?? [],        
       json.tagList?.map((t: any) => TagEntity.fromJSON ? TagEntity.fromJSON(t) : t) ?? [],
       json.table,
