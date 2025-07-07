@@ -9,7 +9,7 @@ import { Label } from "../ui/label";
 import { Eye, File, Plus } from "lucide-react";
 import { useParams } from "react-router-dom";
 import DashboardForm from "../forms/dashboard/dashboardForm";
-import TableForm from "../forms/tableForm";
+import TableForm from "../forms/table/tableForm";
 import { Separator } from "@radix-ui/react-separator";
 import {
   Dialog,
@@ -33,6 +33,7 @@ function Header() {
   return (
     <section className="flex flex-row items-center justify-between w-full h-12 px-5 border-b-2 border-gray-200 ">
       <Label>Kango</Label>
+      {/* Attached Files */}
       <article className="flex flex-row gap-2">
         {/* Handle Attached Files */}
         {isDashboardPage ? (

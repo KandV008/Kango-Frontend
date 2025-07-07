@@ -11,6 +11,7 @@ function CardForm() {
           name="title"
           defaultValue=""
           placeholder="Card X"
+          required
         />
       </div>
     </div>

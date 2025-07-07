@@ -41,6 +41,8 @@ function Card({ card, dashboardId }: componentProps) {
       }
 
       toast.success("Card has been deleted.");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting card:", error);
       toast.error("Error deleting card. Please try again.");

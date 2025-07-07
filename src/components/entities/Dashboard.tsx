@@ -1,4 +1,4 @@
-import { CreditCard, File, Rows3, Tag } from "lucide-react";
+import { CreditCard, Eye, File, Rows3, Tag, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import type { DashboardEntity } from "@/model/dashboard/dashboard";
 import {
@@ -46,7 +46,7 @@ interface componentProps {
 }
 
 function Dashboard({ dashboard }: componentProps) {
-  const [dashboardName, setDashboardName] = useState<string>(dashboard.name)
+  const [dashboardName, setDashboardName] = useState<string>(dashboard.name);
 
   const calculateNumCards = (tables: TableEntity[]) => {
     return tables.reduce((count, table) => count + table.cardList.length, 0);
@@ -110,11 +110,22 @@ function Dashboard({ dashboard }: componentProps) {
       <section className="flex flex-row items-center justify-between w-full">
         <h1>{dashboardName}</h1>
         <article className="flex flex-row gap-3">
-          <UpdateDashboardNameForm dashboard={dashboard} updatedAction={(newValue: string) => {setDashboardName(newValue)} } />
-          <Button onClick={readDashboardAction}>Access</Button>
+          <UpdateDashboardNameForm
+            dashboard={dashboard}
+            updatedAction={(newValue: string) => {
+              setDashboardName(newValue);
+            }}
+          />
+          <Button onClick={readDashboardAction}>
+            <Eye />
+            Access
+          </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button>Delete</Button>
+              <Button>
+                <Trash />
+                Delete
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

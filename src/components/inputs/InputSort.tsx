@@ -2,7 +2,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 
 export function InputSort() {
   return (
-    <Select name="sortType">
+    <Select name="sortType" required>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select a sort type" />
       </SelectTrigger>

@@ -19,6 +19,7 @@ interface componentProps {
   dashboardId?: string;
   cardId?: string;
   mode?: "DASHBOARD" | "CARD";
+  onRemove?: (file: AttachedFileProps) => void;
 }
 
 function AttachedFile({
@@ -26,6 +27,7 @@ function AttachedFile({
   dashboardId,
   cardId,
   mode = "DASHBOARD",
+  onRemove,
 }: componentProps) {
   const dettachFileAction = async () => {
     const actionId = mode === "DASHBOARD" ? dashboardId : cardId;
@@ -47,6 +49,9 @@ function AttachedFile({
       }
 
       toast.success("File has been removed.");
+      if (onRemove) {
+        onRemove(attachedFile);
+      }
     } catch (error) {
       console.error("Error detaching file:", error);
       toast.error("Error detaching file. Please try again.");

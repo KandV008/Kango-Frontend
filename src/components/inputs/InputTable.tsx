@@ -7,7 +7,7 @@ interface componentProps{
 
 export function InputTable({ tables }: componentProps) {
   return (
-    <Select name="destination-table">
+    <Select name="destination-table" required>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select a table" />
       </SelectTrigger>

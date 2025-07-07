@@ -6,20 +6,21 @@ import { Pen } from "lucide-react";
 import { toast } from "sonner";
 import type { DashboardEntity } from "@/model/dashboard/dashboard";
 import type { DashboardDTO } from "@/model/dashboard/dashboardDTO";
+import { useState } from "react";
 
 interface componentProps {
   dashboard: DashboardEntity;
-  updatedAction: (newValue: string) => void
+  updatedAction: (newValue: string) => void;
 }
 
 function UpdateDashboardNameForm({ dashboard, updatedAction }: componentProps) {
+  const [defaultName, setDefaultName] = useState<string>(dashboard.name);
+
   const udpateCardTitleAction = async (formData: FormData) => {
     try {
       const dashboardDTO: DashboardDTO = {
         name: formData.get("name")?.toString(),
       };
-
-      updatedAction(dashboardDTO.name!)
 
       const response = await fetch(
         `http://localhost:8080/api/dashboards/${dashboard.id}/name`,
@@ -33,8 +34,13 @@ function UpdateDashboardNameForm({ dashboard, updatedAction }: componentProps) {
       );
 
       if (response.status !== 204) {
-        throw new Error(`Failed to updated dashboard (status: ${response.status})`);
+        throw new Error(
+          `Failed to updated dashboard (status: ${response.status})`
+        );
       }
+
+      updatedAction(dashboardDTO.name!);
+      setDefaultName(dashboardDTO.name!);
 
       toast.success("Dashboard has been updated.");
     } catch (error) {
@@ -47,7 +53,7 @@ function UpdateDashboardNameForm({ dashboard, updatedAction }: componentProps) {
     <Popover>
       <PopoverTrigger className="w-full">
         <Button>
-            <Pen /> Update
+          <Pen /> Update
         </Button>
       </PopoverTrigger>
       <PopoverContent side="top">
@@ -57,8 +63,9 @@ function UpdateDashboardNameForm({ dashboard, updatedAction }: componentProps) {
             id="name-input"
             name="name"
             placeholder="Dashboard X"
-            defaultValue={""}
+            defaultValue={defaultName}
             className="h-8 col-span-2"
+            required
           />
           <Button type="submit">
             <Pen /> Update

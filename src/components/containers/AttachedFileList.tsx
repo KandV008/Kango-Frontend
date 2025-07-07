@@ -10,6 +10,18 @@ interface componentProps {
 function AttachedFileList({ dashboardId }: componentProps) {
   const [attachedFiles, setAttachedFiles] = useState<AttachedFileProps[]>([]);
 
+  const removeFile = (
+    fileToRemove: AttachedFileProps,
+    attachedFiles: AttachedFileProps[]
+  ) => {
+    const updatedFiles = attachedFiles.filter(
+      (f) =>
+        f.fileName !== fileToRemove.fileName ||
+        f.fileUrl !== fileToRemove.fileUrl
+    );
+    setAttachedFiles(updatedFiles);
+  };
+
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
@@ -25,7 +37,7 @@ function AttachedFileList({ dashboardId }: componentProps) {
 
         const data = await response.json();
         const mappedDashboard = DashboardEntity.fromJSON(data);
-                console.log(mappedDashboard)
+        console.log(mappedDashboard);
 
         const attachedFilesAux = mappedDashboard.atacchedFiles;
         setAttachedFiles(attachedFilesAux);
@@ -36,15 +48,25 @@ function AttachedFileList({ dashboardId }: componentProps) {
 
     if (dashboardId) fetchDashboard();
   }, [dashboardId]);
+
   return (
     <section className="flex flex-col flex-wrap items-center justify-center gap-5 px-5 size-full ">
-      {attachedFiles.map((file, index) => (
-        <AttachedFile
-          key={"attached-file-" + index}
-          attachedFile={file}
-          dashboardId={dashboardId!}
-        />
-      ))}
+      {attachedFiles && attachedFiles.length !== 0 ? (
+        <>
+          {attachedFiles.map((file, index) => (
+            <AttachedFile
+              key={"attached-file-" + index}
+              attachedFile={file}
+              dashboardId={dashboardId!}
+              onRemove={() => removeFile(file, attachedFiles)}
+            />
+          ))}
+        </>
+      ) : (
+        <em className="w-full text-center ">
+          This Dashboard doesn't have any attached files.
+        </em>
+      )}
     </section>
   );
 }

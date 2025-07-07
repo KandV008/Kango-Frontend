@@ -5,7 +5,6 @@ import { Label } from "../ui/label";
 import Card from "./Card";
 import { Popover, PopoverContent } from "../ui/popover";
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import TableForm from "../forms/tableForm";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,6 +43,7 @@ import copyCardListFromTableToAnotherTable from "@/lib/forms/table/copyCardListF
 import { InputCardTemplate } from "../inputs/InputCardTemplate";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import UpdateTableNameForm from "../forms/table/updateTableNameForm";
 
 interface componentProps {
   table: TableEntity;
@@ -53,6 +53,7 @@ interface componentProps {
 function Table({ table, tables }: componentProps) {
   const cardList = [...table.cardList].sort((a, b) => a.position - b.position);
   const otherTables = [...tables].filter((a) => a.id !== table.id);
+  const [tableName, setTableName] = useState<string>(table.name);
 
   const deleteTableAction = async () => {
     try {
@@ -68,6 +69,8 @@ function Table({ table, tables }: componentProps) {
       }
 
       toast.success("Table has been deleted.");
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting table:", error);
       toast.error("Error deleting table. Please try again.");
@@ -98,11 +101,31 @@ function Table({ table, tables }: componentProps) {
       }
 
       toast.success("Card List has been sorted.");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      window.location.reload();
     } catch (error) {
       console.error("Error sorting card list:", error);
       toast.error("Error sorting card list. Please try again.");
     }
   };
+
+  const handleMoveCardListAction = async (formData: FormData) => {
+    await moveCardListFromTableToAnotherTable(formData);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    window.location.reload();
+  };
+
+  const handleCopyCardListAction = async (formData: FormData) => {
+    await copyCardListFromTableToAnotherTable(formData);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    window.location.reload();
+  };
+
+  const handleCardCreationAction = async (formData: FormData) => {
+    await createCard(formData);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    window.location.reload();
+  }
 
   /* Monitoring Drag & Drop Logic */
   useEffect(() => {
@@ -116,8 +139,8 @@ function Table({ table, tables }: componentProps) {
         const typeDropZone = destination.data.type;
         const typeElement = source.data.type;
 
-        console.log("TYPE", typeDropZone)
-        console.log("ELEMENT", typeElement)
+        console.log("TYPE", typeDropZone);
+        console.log("ELEMENT", typeElement);
 
         if (typeElement !== "CARD" || typeElement !== typeDropZone) {
           return;
@@ -129,19 +152,6 @@ function Table({ table, tables }: componentProps) {
         const originTableId = Number(source.data.table);
         const cardPosition = Number(source.data.position);
         const cardId = Number(source.data.card);
-
-        console.log(
-          "DESTINY TABLE:",
-          destinyTableId,
-          "DESTINY ZONE:",
-          destinyTableZone,
-          "ORIGIN TABLE:",
-          originTableId,
-          "CARD POSITION:",
-          cardPosition,
-          "CARD ID:",
-          cardId
-        );
 
         if (destinyTableId === originTableId) {
           const isNotNecessaryToMove =
@@ -204,10 +214,13 @@ function Table({ table, tables }: componentProps) {
     : "border-black text-black";
 
   return (
-    <article className={`${baseCardStyle} ${dragCardStyle}`} ref={ref}>
+    <article
+      ref={ref}
+      className={`${baseCardStyle} ${dragCardStyle} grow h-full max-h-full`}
+    >
       {/* Header */}
       <section className="flex flex-row items-center justify-between w-full gap-2 p-2 border-b-2 border-black h-fit">
-        <Label>{table.name}</Label>
+        <Label>{tableName}</Label>
         <article className="flex flex-row gap-1">
           {/* Update Table Name */}
           <Popover>
@@ -217,7 +230,12 @@ function Table({ table, tables }: componentProps) {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="p-5 mt-5 mr-5 w-80 bg-neutral-100 rounded-2xl">
-              <TableForm dashboardId={""} table={table} />
+              <UpdateTableNameForm
+                table={table}
+                updatedAction={(newValue: string) => {
+                  setTableName(newValue);
+                }}
+              />
             </PopoverContent>
           </Popover>
           {/* Options */}
@@ -262,7 +280,7 @@ function Table({ table, tables }: componentProps) {
                   <Button variant="outline">Move Card List</Button>
                 </PopoverTrigger>
                 <PopoverContent side="right" className="w-80">
-                  <form action={moveCardListFromTableToAnotherTable}>
+                  <form action={handleMoveCardListAction}>
                     <div className="grid gap-4">
                       <div className="space-y-2">
                         <h4 className="font-medium leading-none">
@@ -292,7 +310,7 @@ function Table({ table, tables }: componentProps) {
                   <Button variant="outline">Copy Card List</Button>
                 </PopoverTrigger>
                 <PopoverContent side="right" className="w-80">
-                  <form action={copyCardListFromTableToAnotherTable}>
+                  <form action={handleCopyCardListAction}>
                     <div className="grid gap-4">
                       <div className="space-y-2">
                         <h4 className="font-medium leading-none">
@@ -347,7 +365,7 @@ function Table({ table, tables }: componentProps) {
         </article>
       </section>
       {/* CardList */}
-      <section className="flex flex-col justify-start w-full h-full gap-3">
+      <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-auto">
         {/* Action Add Card */}
         <article className="grid justify-end w-full">
           <Dialog>
@@ -358,7 +376,7 @@ function Table({ table, tables }: componentProps) {
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
-              <form action={createCard} className="grid gap-5">
+              <form action={handleCardCreationAction} className="grid gap-5">
                 <Input type="hidden" name="table_id" value={table.id} />
                 <DialogHeader>
                   <DialogTitle>Create Card</DialogTitle>

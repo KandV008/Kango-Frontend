@@ -32,22 +32,8 @@ function TableList({ tables }: componentProps) {
         const destinyDashboardId = Number(destination.data.destination);
         const destinyTableZone = Number(destination.data.zone);
 
-        const originDashboardId = Number(source.data.dashboard);
         const tablePosition = Number(source.data.position);
         const tableId = Number(source.data.table);
-
-        console.log(
-          "DESTINY DASHBOARD:",
-          destinyDashboardId,
-          "DESTINY ZONE:",
-          destinyTableZone,
-          "ORIGIN DASHBOARD:",
-          originDashboardId,
-          "TABLE POSITION:",
-          tablePosition,
-          "TABLE ID:",
-          tableId
-        );
 
         const isNotNecessaryToMove =
           destinyTableZone === tablePosition ||

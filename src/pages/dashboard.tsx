@@ -9,7 +9,7 @@ function DashboardPage() {
   const { id } = useParams();
 
   const [dashboard, setDashboard] = useState<DashboardEntity | null>(null);
-  const [isLoading, setLoading] = useState<boolean>(true)
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -30,7 +30,7 @@ function DashboardPage() {
         //console.log("TABLE", mappedDashboard.tableList);
 
         setDashboard(mappedDashboard);
-        setLoading(false)
+        setLoading(false);
       } catch (err) {
         console.error("Fetch error:", err);
       }
@@ -39,14 +39,16 @@ function DashboardPage() {
     if (id) fetchDashboard();
   }, [id]);
 
-  if (isLoading) return <></>
+  if (isLoading) return <></>;
 
   return (
-    <main className="flex flex-row">
+    <main className="flex flex-row h-screen">
       <SideBar />
       <div className="flex flex-col w-full">
         <Header />
-        <TableList tables={dashboard!.tableList} />
+        <div className="flex-1 overflow-hidden">
+          <TableList tables={dashboard!.tableList} />
+        </div>
       </div>
     </main>
   );
