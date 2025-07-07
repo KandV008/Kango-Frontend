@@ -62,16 +62,24 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
   const createCardUsingATemplateAction = async (formData: FormData) => {
     const templateCardId = formData.get("card_id")?.toString();
 
-    const createCardRes = await fetch(`http://localhost:8080/api/cards/${templateCardId}/copy`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const createCardRes = await fetch(
+      `http://localhost:8080/api/cards/${templateCardId}/copy`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!createCardRes.ok) {
-      console.error("Error creating card using a template:", await createCardRes.text());
-      toast.error(`Error creating card using a template: ${await createCardRes.text()}`);
+      console.error(
+        "Error creating card using a template:",
+        await createCardRes.text()
+      );
+      toast.error(
+        `Error creating card using a template: ${await createCardRes.text()}`
+      );
     }
 
     const createdCard = await createCardRes.json();
@@ -103,6 +111,8 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
 
     console.log("Card created successfully");
     toast.success("Card has been created.");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    window.location.reload();
   };
 
   return (
@@ -110,24 +120,31 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
       className="flex flex-col gap-3"
       action={createCardUsingATemplateAction}
     >
-      <ScrollArea className="p-3 border rounded-md w-96 whitespace-nowrap">
-        <RadioGroup
-          name="card_id"
-          defaultValue="comfortable"
-          className="flex flex-row"
-        >
-          {allTemplates.map((card) => (
-            <div className="flex items-center gap-3">
-              <RadioGroupItem
-                id={"template-card-" + card.id}
-                className=""
-                value={card.id.toString()}
-                key={"template-card-" + card.id}
-              />
-              <Card card={card} />
-            </div>
-          ))}
-        </RadioGroup>
+      <ScrollArea className="grid justify-center p-3 border rounded-md w-96 whitespace-nowrap">
+        {allTemplates && allTemplates.length !== 0 ? (
+          <RadioGroup
+            name="card_id"
+            defaultValue="comfortable"
+            className="flex flex-row"
+            required
+          >
+            {allTemplates.map((card) => (
+              <div className="flex items-center gap-3">
+                <RadioGroupItem
+                  id={"template-card-" + card.id}
+                  className=""
+                  value={card.id.toString()}
+                  key={"template-card-" + card.id}
+                />
+                <Card card={card} />
+              </div>
+            ))}
+          </RadioGroup>
+        ) : (
+          <em className="w-full text-center ">
+            Currently, there is no card template available.
+          </em>
+        )}
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
 

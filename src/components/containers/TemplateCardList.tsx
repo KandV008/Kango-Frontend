@@ -10,9 +10,9 @@ interface componentProps {
 function TemplateCardList({ dashboardId }: componentProps) {
   const [globalCardList, setGlobalCardList] = useState<CardEntity[]>([]);
   const [localCardList, setLocalCardList] = useState<CardEntity[]>([]);
+  const allTemplates = [...globalCardList, ...localCardList];
 
   useEffect(() => {
-    
     fetch(`http://localhost:8080/api/global-template-cards`)
       .then((response) => {
         if (!response.ok) {
@@ -55,12 +55,20 @@ function TemplateCardList({ dashboardId }: componentProps) {
 
   return (
     <section className="flex flex-col flex-wrap items-center justify-center gap-5 px-5 size-full ">
-      {globalCardList.map((card) => (
-        <Card card={card} key={"global-template-card-" + card.id}/>
-      ))}
-      {localCardList.map((card) => (
-        <Card card={card} key={"local-template-card-" + card.id}/>
-      ))}
+      {allTemplates && allTemplates.length !== 0 ? (
+        <>
+          {globalCardList.map((card) => (
+            <Card card={card} key={"global-template-card-" + card.id} />
+          ))}
+          {localCardList.map((card) => (
+            <Card card={card} key={"local-template-card-" + card.id} />
+          ))}
+        </>
+      ) : (
+        <em className="w-full text-center ">
+          Currently, there is no card template available.
+        </em>
+      )}
     </section>
   );
 }

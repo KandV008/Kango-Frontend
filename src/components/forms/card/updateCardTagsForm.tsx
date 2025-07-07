@@ -135,21 +135,29 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
           <Description>Select or unselect some tags.</Description>
           <ScrollArea className="">
             <section className="flex flex-col justify-center gap-2">
-              {allTags.map((tag, index) => (
-                <article
-                  key={"input-tag-" + tag.id}
-                  className="flex flex-row gap-1"
-                >
-                  <Input
-                    type="checkbox"
-                    name={tagListName + index}
-                    value={tag.id}
-                    className="self-center size-5"
-                    defaultChecked={tagsInside.some((t) => t.id === tag.id)}
-                  />
-                  <Tag tag={tag} />
-                </article>
-              ))}
+              {allTags && allTags.length !== 0 ? (
+                <>
+                  {allTags.map((tag, index) => (
+                    <article
+                      key={"input-tag-" + tag.id}
+                      className="flex flex-row gap-1"
+                    >
+                      <Input
+                        type="checkbox"
+                        name={tagListName + index}
+                        value={tag.id}
+                        className="self-center size-5"
+                        defaultChecked={tagsInside.some((t) => t.id === tag.id)}
+                      />
+                      <Tag tag={tag} />
+                    </article>
+                  ))}
+                </>
+              ) : (
+                <em className="w-full p-2 text-center">
+                  Currently, there is no tag available.
+                </em>
+              )}
             </section>
           </ScrollArea>
           <Button type="submit">

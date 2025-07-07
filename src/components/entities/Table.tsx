@@ -125,7 +125,7 @@ function Table({ table, tables }: componentProps) {
     await createCard(formData);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     window.location.reload();
-  }
+  };
 
   /* Monitoring Drag & Drop Logic */
   useEffect(() => {
@@ -377,6 +377,7 @@ function Table({ table, tables }: componentProps) {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <form action={handleCardCreationAction} className="grid gap-5">
+                {/* Header */}
                 <Input type="hidden" name="table_id" value={table.id} />
                 <DialogHeader>
                   <DialogTitle>Create Card</DialogTitle>
@@ -384,6 +385,7 @@ function Table({ table, tables }: componentProps) {
                     Set the attributes of the new Card
                   </DialogDescription>
                 </DialogHeader>
+                {/* Form */}
                 <CardForm />
                 {/* Footer */}
                 <DialogFooter>
