@@ -1,13 +1,14 @@
 import {
   Popover,
   PopoverContent,
+  PopoverPortal,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Eye, File, Plus } from "lucide-react";
 import { useParams } from "react-router-dom";
-import DashboardForm from "../forms/dashboardForm";
+import DashboardForm from "../forms/dashboard/dashboardForm";
 import TableForm from "../forms/tableForm";
 import { Separator } from "@radix-ui/react-separator";
 import {
@@ -45,7 +46,7 @@ function Header() {
               <Label>Handle Attached Files</Label>
               <Separator />
               <div className="flex flex-row gap-2">
-                {/* Add Attached File */}
+                {/* Add Attach File */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button asChild>
@@ -106,13 +107,18 @@ function Header() {
               <Plus /> Create {isDashboardPage ? "Table" : "Dashboard"}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="p-5 mt-5 mr-5 w-80 bg-neutral-100 rounded-2xl">
-            {isDashboardPage ? (
-              <TableForm dashboardId={id} />
-            ) : (
-              <DashboardForm />
-            )}
-          </PopoverContent>
+          <PopoverPortal>
+            <PopoverContent
+              sideOffset={10}
+              className="z-50 p-5 mt-5 mr-5 w-80 bg-neutral-100 rounded-2xl"
+            >
+              {isDashboardPage ? (
+                <TableForm dashboardId={id} />
+              ) : (
+                <DashboardForm />
+              )}
+            </PopoverContent>
+          </PopoverPortal>
         </Popover>
       </article>
     </section>

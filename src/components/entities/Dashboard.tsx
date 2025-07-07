@@ -14,6 +14,9 @@ import {
 } from "../ui/alert-dialog";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import type { TableEntity } from "@/model/table/table";
+import UpdateDashboardNameForm from "../forms/dashboard/updateDashboardNameForm";
+import { useState } from "react";
 
 const items = [
   {
@@ -43,6 +46,12 @@ interface componentProps {
 }
 
 function Dashboard({ dashboard }: componentProps) {
+  const [dashboardName, setDashboardName] = useState<string>(dashboard.name)
+
+  const calculateNumCards = (tables: TableEntity[]) => {
+    return tables.reduce((count, table) => count + table.cardList.length, 0);
+  };
+
   const stadistics = [
     {
       title: "tables",
@@ -50,7 +59,7 @@ function Dashboard({ dashboard }: componentProps) {
     },
     {
       title: "cards",
-      count: 0,
+      count: calculateNumCards(dashboard.tableList),
     },
     {
       title: "files",
@@ -88,6 +97,8 @@ function Dashboard({ dashboard }: componentProps) {
       }
 
       toast.success("Dashboard has been deleted.");
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting dashboard:", error);
       toast.error("Error deleting dashboard. Please try again.");
@@ -97,8 +108,9 @@ function Dashboard({ dashboard }: componentProps) {
   return (
     <article className="flex flex-col items-start justify-between w-full px-5 py-4 mx-auto border-2 border-black rounded-b-md rounded-tr-md rounded-tl-2xl h-28">
       <section className="flex flex-row items-center justify-between w-full">
-        <h1>{dashboard.name}</h1>
+        <h1>{dashboardName}</h1>
         <article className="flex flex-row gap-3">
+          <UpdateDashboardNameForm dashboard={dashboard} updatedAction={(newValue: string) => {setDashboardName(newValue)} } />
           <Button onClick={readDashboardAction}>Access</Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
