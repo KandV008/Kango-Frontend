@@ -37,3 +37,10 @@ export function getDataColor(color: Color): DataColor {
     if (!data) throw new Error("Invalid Color");
     return data;
 }
+
+export function colorValueOf(colorStr: string): Color {
+    if (colorStr in COLOR) {
+        return colorStr as Color;
+    }
+    throw new Error(`Invalid color string: ${colorStr}`);
+}

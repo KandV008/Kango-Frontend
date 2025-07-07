@@ -11,6 +11,7 @@ function AttachedFileForm() {
           name="file-name"
           defaultValue=""
           placeholder="Name X"
+          required
         />
       </div>
       <div className="grid gap-3">
@@ -20,6 +21,7 @@ function AttachedFileForm() {
           name="file-url"
           defaultValue=""
           placeholder="URL X"
+          required
         />
       </div>
     </div>

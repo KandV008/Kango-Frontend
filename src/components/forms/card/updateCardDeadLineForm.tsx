@@ -6,12 +6,15 @@ import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
 import { InputCalendar } from "@/components/inputs/InputCalendar";
+import { useState } from "react";
 
 interface componentProps {
   card: CardEntity;
 }
 
 function UpdateCardDeadLineForm({ card }: componentProps) {
+  const [deadLine, setDeadLine] = useState<Date | null>(card.deadLine);
+
   const getFormattedDate = (date: Date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, "0");
@@ -29,9 +32,9 @@ function UpdateCardDeadLineForm({ card }: componentProps) {
         deadLine: parsedDate,
       };
 
-      console.log("RAW DATE", rawDate)
-      console.log("PARSE DATE", parsedDate)
-      console.log("DTO", cardDTO)
+      console.log("RAW DATE", rawDate);
+      console.log("PARSE DATE", parsedDate);
+      console.log("DTO", cardDTO);
 
       const response = await fetch(
         `http://localhost:8080/api/cards/${card.id}/deadline`,
@@ -49,6 +52,7 @@ function UpdateCardDeadLineForm({ card }: componentProps) {
       }
 
       toast.success("Card has been updated.");
+      setDeadLine(parsedDate)
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");
@@ -59,8 +63,8 @@ function UpdateCardDeadLineForm({ card }: componentProps) {
     <Popover>
       <PopoverTrigger className="w-full">
         <h2 className="grid items-center hover:bg-gray-200">
-          {card.deadLine ? (
-            <>{getFormattedDate(card.deadLine)}</>
+          {deadLine ? (
+            <>{getFormattedDate(deadLine)}</>
           ) : (
             <em className="justify-center w-full text-center self">
               This Card doesn't have a deadline.

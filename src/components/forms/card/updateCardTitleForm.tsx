@@ -6,16 +6,20 @@ import { Pen } from "lucide-react";
 import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
+import { useState } from "react";
 
 interface componentProps {
   card: CardEntity;
 }
 
 function UpdateCardTitleForm({ card }: componentProps) {
+  const [title, setTitle] = useState<string>(card.title);
+
   const udpateCardTitleAction = async (formData: FormData) => {
     try {
+      const newTitle = formData.get("title")?.toString();
       const cardDTO: CardDTO = {
-        title: formData.get("title")?.toString(),
+        title: newTitle,
       };
 
       const response = await fetch(
@@ -34,6 +38,7 @@ function UpdateCardTitleForm({ card }: componentProps) {
       }
 
       toast.success("Card has been updated.");
+      setTitle(newTitle!);
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");
@@ -43,7 +48,7 @@ function UpdateCardTitleForm({ card }: componentProps) {
   return (
     <Popover>
       <PopoverTrigger className="w-full">
-        <h1 className="w-full hover:bg-gray-200">{card.title}</h1>
+        <h1 className="w-full hover:bg-gray-200">{title}</h1>
       </PopoverTrigger>
       <PopoverContent side="top">
         <form action={udpateCardTitleAction} className="grid w-full gap-2">
@@ -51,7 +56,7 @@ function UpdateCardTitleForm({ card }: componentProps) {
           <Input
             id="title-input"
             name="title"
-            defaultValue=""
+            defaultValue={title}
             placeholder="Card X"
           />
           <Button type="submit">

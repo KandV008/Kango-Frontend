@@ -17,9 +17,10 @@ import { toast } from "sonner";
 interface componentProps {
   check: CheckProps;
   cardId: string;
+  onRemoved?: (position: number) => void;
 }
 
-function CheckComponent({ check, cardId }: componentProps) {
+function CheckComponent({ check, cardId, onRemoved }: componentProps) {
   const removeCheckAction = async () => {
     try {
       const response = await fetch(
@@ -33,8 +34,12 @@ function CheckComponent({ check, cardId }: componentProps) {
         }
       );
 
-    if (response.status !== 204) {
+      if (response.status !== 204) {
         throw new Error(`Failed to remove check (status: ${response.status})`);
+      }
+
+      if (onRemoved) {
+        onRemoved(check.position!);
       }
 
       toast.success("Check has been removed.");

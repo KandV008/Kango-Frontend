@@ -6,7 +6,7 @@ import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import { getDataColor } from "@/model/utils/color";
 import { useEffect, useState } from "react";
-import type { TagEntity } from "@/model/tag/tag";
+import { TagEntity } from "@/model/tag/tag";
 import getAllTags from "@/lib/forms/tag/getAllTags";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Tag from "@/components/entities/Tag";
@@ -23,63 +23,47 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
   const [globalTagList, setGlobalTagList] = useState<TagEntity[]>([]);
   const [localTagList, setLocalTagList] = useState<TagEntity[]>([]);
   const allTags = [...globalTagList, ...localTagList];
-
-  const tagsInside = allTags.filter((tag) =>
-    card.tagList.some((t) => t.id === tag.id)
-  );
+  const [currentTags, setCurrentTags] = useState<TagEntity[]>(card.tagList);
 
   const tagListName = "tag-input-";
 
   useEffect(() => {
-    const getGlobalTagList = (tags: TagEntity[]) => {
-      setGlobalTagList(tags);
-    };
-    const getLocalTagList = (tags: TagEntity[]) => {
-      setLocalTagList(tags);
-    };
-
-    getAllTags(dashboardId, getGlobalTagList, getLocalTagList);
+    getAllTags(dashboardId, setGlobalTagList, setLocalTagList);
   }, [dashboardId]);
 
-  const udpateCardTagListAction = async (formData: FormData) => {
+  const updateCardTagListAction = async (formData: FormData) => {
     const selectedTags: string[] = [];
-    const tagListLenght = allTags.length;
-    for (let i = 0; i < tagListLenght; i++) {
+
+    for (let i = 0; i < allTags.length; i++) {
       const data = formData.get(tagListName + i)?.toString();
-      console.log(i, data);
       if (data) selectedTags.push(data);
     }
 
-    const newTagsSelected = selectedTags.filter(
-      (tagId) => !tagsInside.some((t) => t.id.toString() === tagId)
+    const tagsInside = allTags.filter((tag) =>
+      currentTags.some((t) => t.id === tag.id)
     );
 
+    const added = await addTagsToCard(selectedTags, tagsInside, card);
+    const removed = await removeTagsFromCard(tagsInside, selectedTags, card);
+
+    const currentTagsWithNewTags = [...currentTags, ...added]
+    const updatedCurrentTags = currentTagsWithNewTags.filter((tag) => 
+      !removed.some((t) => t.id === tag.id)
+    )
+ 
+    setCurrentTags(updatedCurrentTags);
+  };
+
+  const removeTagsFromCard = async (
+    tagsInside: TagEntity[],
+    selectedTags: string[],
+    card: CardEntity
+  ): Promise<TagEntity[]> => {
     const tagsToRemove = tagsInside.filter(
-      (tagId) => !selectedTags.some((t) => t === tagId.id.toString())
+      (tag) => !selectedTags.includes(tag.id.toString())
     );
 
-    newTagsSelected.forEach(async (tag) => {
-      const response = await fetch(
-        `http://localhost:8080/api/cards/${card.id}/tags`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(tag),
-        }
-      );
-
-      if (response.status !== 204) {
-        console.error("Error adding tag:", tag, "to card:", card.id);
-        toast.error(`Error adding tag to card`);
-        return;
-      }
-
-      toast.success(`Tag added to card successfully`);
-    });
-
-    tagsToRemove.forEach(async (tag) => {
+    for (const tag of tagsToRemove) {
       const response = await fetch(
         `http://localhost:8080/api/cards/${card.id}/tags`,
         {
@@ -94,65 +78,97 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
       if (response.status !== 204) {
         console.error("Error removing tag:", tag, "from card:", card.id);
         toast.error(`Error removing tag from card`);
-        return;
+      } else {
+        toast.success(`Tag removed from card successfully`);
       }
+    }
 
-      toast.success(`Tag removed from card successfully`);
-    });
+    return tagsToRemove;
+  };
+
+  const addTagsToCard = async (
+    selectedTags: string[],
+    tagsInside: TagEntity[],
+    card: CardEntity
+  ): Promise<TagEntity[]> => {
+    const newTags = selectedTags.filter(
+      (tagId) => !tagsInside.some((t) => t.id.toString() === tagId)
+    );
+
+    for (const tagId of newTags) {
+      const response = await fetch(
+        `http://localhost:8080/api/cards/${card.id}/tags`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(tagId),
+        }
+      );
+
+      if (response.status !== 204) {
+        console.error("Error adding tag:", tagId, "to card:", card.id);
+        toast.error(`Error adding tag to card`);
+      } else {
+        toast.success(`Tag added to card successfully`);
+      }
+    }
+
+    return allTags.filter((t) => newTags.includes(t.id.toString()));
   };
 
   return (
     <Popover>
       <PopoverTrigger className="flex flex-row flex-wrap items-center justify-center w-full h-full gap-1 p-1 break-words hover:bg-gray-200">
-        {card.tagList && card.tagList.length !== 0 ? (
-          <>
-            {card.tagList.map((tag) => {
-              const tagColor = getDataColor(tag.color ? tag.color : "BLACK");
-              const textColor =
-                tag.color === "BLACK" ? "text-white" : "text-black";
-              return (
-                <Badge
-                  className={`px-2 border border-black ${textColor}`}
-                  style={{ backgroundColor: "#" + tagColor.hex }}
-                >
-                  {tag.label}
-                </Badge>
-              );
-            })}
-          </>
+        {currentTags.length > 0 ? (
+          currentTags.map((tag) => {
+            const tagColor = getDataColor(tag.color ?? "BLACK");
+            const textColor =
+              tag.color === "BLACK" ? "text-white" : "text-black";
+            return (
+              <Badge
+                key={tag.id}
+                className={`px-2 border border-black ${textColor}`}
+                style={{ backgroundColor: "#" + tagColor.hex }}
+              >
+                {tag.label}
+              </Badge>
+            );
+          })
         ) : (
-          <em className="w-full text-center ">
+          <em className="w-full text-center">
             This Card doesn't have any tag.
           </em>
-        )}{" "}
+        )}
       </PopoverTrigger>
-      <PopoverContent side="right" className="">
+      <PopoverContent side="right">
         <form
-          action={udpateCardTagListAction}
+          action={updateCardTagListAction}
           className="grid w-full h-full gap-2"
         >
           <Label>Update Card's Tag List</Label>
           <Description>Select or unselect some tags.</Description>
-          <ScrollArea className="">
+          <ScrollArea>
             <section className="flex flex-col justify-center gap-2">
-              {allTags && allTags.length !== 0 ? (
-                <>
-                  {allTags.map((tag, index) => (
-                    <article
-                      key={"input-tag-" + tag.id}
-                      className="flex flex-row gap-1"
-                    >
-                      <Input
-                        type="checkbox"
-                        name={tagListName + index}
-                        value={tag.id}
-                        className="self-center size-5"
-                        defaultChecked={tagsInside.some((t) => t.id === tag.id)}
-                      />
-                      <Tag tag={tag} />
-                    </article>
-                  ))}
-                </>
+              {allTags.length > 0 ? (
+                allTags.map((tag, index) => (
+                  <article
+                    key={"input-tag-" + tag.id}
+                    className="flex flex-row gap-1"
+                  >
+                    <Input
+                      type="checkbox"
+                      name={tagListName + index}
+                      value={tag.id}
+                      className="self-center size-5"
+                      defaultChecked={currentTags.some(
+                        (t) => t.id === tag.id
+                      )}
+                    />
+                    <Tag tag={tag} />
+                  </article>
+                ))
               ) : (
                 <em className="w-full p-2 text-center">
                   Currently, there is no tag available.
@@ -161,7 +177,8 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
             </section>
           </ScrollArea>
           <Button type="submit">
-            <Pen /> Update
+            <Pen className="mr-2 size-4" />
+            Update
           </Button>
         </form>
       </PopoverContent>

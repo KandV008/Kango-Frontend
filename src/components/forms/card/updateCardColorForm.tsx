@@ -5,15 +5,17 @@ import { Pen } from "lucide-react";
 import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
-import { getDataColor } from "@/model/utils/color";
+import { colorValueOf, getDataColor, type Color } from "@/model/utils/color";
 import { InputColor } from "@/components/inputs/InputColor";
+import { useState } from "react";
 
 interface componentProps {
   card: CardEntity;
 }
 
 function UpdateCardColorForm({ card }: componentProps) {
-  const cardColor = getDataColor(card.color ? card.color : "BLACK");
+  const [color, setColor] = useState<Color>(card.color ? card.color : "BLACK")
+  const cardColor = getDataColor(color);
 
   const udpateCardColorAction = async (formData: FormData) => {
     try {
@@ -37,6 +39,9 @@ function UpdateCardColorForm({ card }: componentProps) {
       }
 
       toast.success("Card has been updated.");
+
+      const newColor: Color = colorValueOf(cardDTO.color!)
+      setColor(newColor)
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");

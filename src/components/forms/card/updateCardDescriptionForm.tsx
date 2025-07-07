@@ -6,16 +6,20 @@ import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 interface componentProps {
   card: CardEntity;
 }
 
 function UpdateCardDescriptionForm({ card }: componentProps) {
+  const [description, setDescription] = useState<string>(card.description);
+
   const udpateCardDescriptionAction = async (formData: FormData) => {
     try {
+      const newDescription = formData.get("description")?.toString()
       const cardDTO: CardDTO = {
-        description: formData.get("description")?.toString(),
+        description: newDescription,
       };
 
       const response = await fetch(
@@ -34,6 +38,7 @@ function UpdateCardDescriptionForm({ card }: componentProps) {
       }
 
       toast.success("Card has been updated.");
+      setDescription(newDescription!)
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");
@@ -43,8 +48,8 @@ function UpdateCardDescriptionForm({ card }: componentProps) {
   return (
     <Popover>
       <PopoverTrigger className="grid items-center w-full break-words hover:bg-gray-200">
-        {card.description && card.description.length !== 0 ? (
-          <div className="w-[450px] break-words">{card.description}</div>
+        {description && description.length !== 0 ? (
+          <div className="w-[450px] break-words">{description}</div>
         ) : (
           <em className="w-full text-center ">
             This Card doesn't have any description.
@@ -60,7 +65,7 @@ function UpdateCardDescriptionForm({ card }: componentProps) {
           <Textarea
             id="description-input"
             name="description"
-            defaultValue=""
+            defaultValue={description}
             placeholder="Lore ipsum..."
           />
           <Button type="submit">

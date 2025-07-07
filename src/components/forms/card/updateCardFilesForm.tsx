@@ -8,15 +8,20 @@ import { Separator } from "@/components/ui/separator";
 import AttachedFile from "@/components/entities/AttachedFile";
 import type { AttachedFileProps } from "@/model/utils/attachedFile";
 import AttachedFileForm from "../attachedFileForm";
+import { useState } from "react";
 
 interface componentProps {
   card: CardEntity;
 }
 
 function UpdateCardFileForm({ card }: componentProps) {
+  const [currentFiles, setCurrentFiles] = useState<AttachedFileProps[]>(
+    card.attachedFiled
+  );
+
   const addFileToCardAction = async (formData: FormData) => {
     try {
-      const check: AttachedFileProps = {
+      const file: AttachedFileProps = {
         fileName: formData.get("file-name")?.toString(),
         fileUrl: formData.get("file-url")?.toString(),
       };
@@ -28,7 +33,7 @@ function UpdateCardFileForm({ card }: componentProps) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(check),
+          body: JSON.stringify(file),
         }
       );
 
@@ -39,10 +44,23 @@ function UpdateCardFileForm({ card }: componentProps) {
       }
 
       toast.success("File has been added to card.");
+      setCurrentFiles((prev) => [...prev, file]);
     } catch (error) {
       console.error("Error adding file to card:", error);
       toast.error("Error adding file to card. Please try again.");
     }
+  };
+
+  const removeFile = (
+    fileToRemove: AttachedFileProps,
+    attachedFiles: AttachedFileProps[]
+  ) => {
+    const updatedFiles = attachedFiles.filter(
+      (f) =>
+        f.fileName !== fileToRemove.fileName ||
+        f.fileUrl !== fileToRemove.fileUrl
+    );
+    setCurrentFiles(updatedFiles);
   };
 
   return (
@@ -70,14 +88,15 @@ function UpdateCardFileForm({ card }: componentProps) {
       <Separator />
       {/* Check List */}
       <article className="flex flex-col gap-1">
-        {card.attachedFiled && card.attachedFiled.length !== 0 ? (
+        {currentFiles && currentFiles.length !== 0 ? (
           <>
-            {card.attachedFiled.map((check, index) => (
+            {currentFiles.map((file, index) => (
               <AttachedFile
                 key={"file-" + index}
-                attachedFile={check}
+                attachedFile={file}
                 cardId={card.id.toString()}
                 mode="CARD"
+                onRemove={() => removeFile(file, currentFiles)}
               />
             ))}
           </>

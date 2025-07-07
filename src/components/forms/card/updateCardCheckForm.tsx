@@ -8,16 +8,35 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import type { CheckProps } from "@/model/utils/check";
 import CheckComponent from "@/components/entities/Check";
+import { useState } from "react";
 
 interface componentProps {
   card: CardEntity;
 }
 
 function UpdateCardCheckForm({ card }: componentProps) {
+  const sortedChecks = [...card.checks].sort(
+    (a, b) => a.position! - b.position!
+  );
+  const [currentChecks, setCurrentCheks] = useState<CheckProps[]>(sortedChecks);
+
+  const removeCheckFromCardAction = (position: number) => {
+    const updatedChecks = currentChecks
+      .filter((check) => check.position !== position)
+      .map((check, index) => ({
+        ...check,
+        position: index,
+      }));
+
+    setCurrentCheks(updatedChecks);
+  };
+
   const addCheckToCardAction = async (formData: FormData) => {
     try {
       const check: CheckProps = {
         label: formData.get("check")?.toString(),
+        checked: false,
+        position: currentChecks.length,
       };
 
       const response = await fetch(
@@ -38,6 +57,7 @@ function UpdateCardCheckForm({ card }: componentProps) {
       }
 
       toast.success("Check has been added to card.");
+      setCurrentCheks((prev) => [...prev, check]);
     } catch (error) {
       console.error("Error adding check to card:", error);
       toast.error("Error adding check to card. Please try again.");
@@ -63,6 +83,7 @@ function UpdateCardCheckForm({ card }: componentProps) {
                 name="check"
                 defaultValue=""
                 placeholder="Check X"
+                required
               />{" "}
               <Button type="submit">
                 <Plus /> Add Check
@@ -74,13 +95,14 @@ function UpdateCardCheckForm({ card }: componentProps) {
       <Separator />
       {/* Check List */}
       <article className="flex flex-col gap-1">
-        {card.checks && card.checks.length !== 0 ? (
+        {currentChecks && currentChecks.length !== 0 ? (
           <>
-            {card.checks.map((check, index) => (
+            {currentChecks.map((check, index) => (
               <CheckComponent
                 key={"check-" + index}
                 check={check}
                 cardId={card.id.toString()}
+                onRemoved={removeCheckFromCardAction}
               />
             ))}
           </>
