@@ -25,14 +25,61 @@ import AttachedFileForm from "../forms/attachedFileForm";
 import addAttachedFile from "@/lib/forms/addAttachedFile";
 import { Input } from "../ui/input";
 import AttachedFileList from "../containers/AttachedFileList";
+import { useEffect, useState } from "react";
+import { DashboardEntity } from "@/model/dashboard/dashboard";
+import UpdateDashboardNameForm from "../forms/dashboard/updateDashboardNameForm";
 
 function Header() {
   const { id } = useParams();
   const isDashboardPage = id !== undefined;
+  const [dashboard, setDashboard] = useState<DashboardEntity | null>(null);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [dashboardName, setDashboardName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/dashboards/${id}`
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Error fetching dashboard (status: ${response.status})`
+          );
+        }
+
+        const data = await response.json();
+        const mappedDashboard = DashboardEntity.fromJSON(data);
+        setDashboard(mappedDashboard);
+        setDashboardName(mappedDashboard.name);
+        setLoading(false);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    };
+
+    if (id) fetchDashboard();
+  }, [id]);
 
   return (
     <section className="flex flex-row items-center justify-between w-full h-12 px-5 border-b-2 border-gray-200 ">
+      {/* App Name */}
       <Label>Kango</Label>
+      {/* Dashboard Name */}
+      {!isLoading && dashboard ? (
+        <article className="flex justify-between gap-5">
+          <Label className="w-full text-center">{dashboardName}</Label>
+          <UpdateDashboardNameForm
+            dashboard={dashboard}
+            updatedAction={(newValue: string) => {
+              setDashboardName(newValue);
+            }}
+          />
+        </article>
+      ) : (
+        <></>
+      )}
       {/* Attached Files */}
       <article className="flex flex-row gap-2">
         {/* Handle Attached Files */}

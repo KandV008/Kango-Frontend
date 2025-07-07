@@ -26,9 +26,6 @@ function DashboardPage() {
 
         const data = await response.json();
         const mappedDashboard = DashboardEntity.fromJSON(data);
-        //console.log("DASHBOARD", mappedDashboard);
-        //console.log("TABLE", mappedDashboard.tableList);
-
         setDashboard(mappedDashboard);
         setLoading(false);
       } catch (err) {
