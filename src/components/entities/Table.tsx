@@ -139,9 +139,6 @@ function Table({ table, tables }: componentProps) {
         const typeDropZone = destination.data.type;
         const typeElement = source.data.type;
 
-        console.log("TYPE", typeDropZone);
-        console.log("ELEMENT", typeElement);
-
         if (typeElement !== "CARD" || typeElement !== typeDropZone) {
           return;
         }
@@ -166,17 +163,19 @@ function Table({ table, tables }: componentProps) {
             cardPosition - destinyTableZone < 0
               ? destinyTableZone - 1
               : destinyTableZone;
-          console.log("NEW POSITION", newPosition);
+              
           await updateCardPosition(destinyTableId, cardId, newPosition);
-          return;
+        } else {
+          await moveCardFormTableToAnotherTable(
+            originTableId,
+            cardId,
+            destinyTableId,
+            destinyTableZone
+          );
         }
 
-        await moveCardFormTableToAnotherTable(
-          originTableId,
-          cardId,
-          destinyTableId,
-          destinyTableZone
-        );
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        window.location.reload();
       },
     });
   }, []);

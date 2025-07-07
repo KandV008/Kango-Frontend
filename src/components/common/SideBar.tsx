@@ -1,10 +1,8 @@
 import {
-  ALargeSmall,
+  CircleQuestionMark,
   CreditCard,
   Eye,
   Home,
-  Languages,
-  LogOut,
   Plus,
   Settings,
   Tag,
@@ -296,32 +294,11 @@ function SideBar() {
                     <SidebarGroupContent className="pl-10">
                       <SidebarMenuSubButton asChild>
                         <a>
-                          <ALargeSmall />
-                          <span>Change Font Size</span>
-                        </a>
-                      </SidebarMenuSubButton>
-                      <SidebarMenuSubButton asChild>
-                        <a>
-                          <Languages />
-                          <span>Change Language</span>
-                        </a>
-                      </SidebarMenuSubButton>
-                      <SidebarMenuSubButton asChild>
-                        <a>
-                          <Eye />
-                          <span>Change Color Blind</span>
+                          <CircleQuestionMark />
+                          <span>[...]</span>
                         </a>
                       </SidebarMenuSubButton>
                     </SidebarGroupContent>
-                  </SidebarMenuItem>
-                  {/* Exit */}
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <a href="#">
-                        <LogOut />
-                        <span>Exit</span>
-                      </a>
-                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>

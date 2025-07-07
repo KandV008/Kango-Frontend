@@ -11,7 +11,6 @@ interface componentProps {
 
 function TableList({ tables }: componentProps) {
   const tableList = [...tables].sort((a, b) => a.position - b.position);
-  console.log("TABLES", tables);
 
   /* Monitoring Drag & Drop Logic */
   useEffect(() => {
@@ -47,12 +46,15 @@ function TableList({ tables }: componentProps) {
           tablePosition - destinyTableZone < 0
             ? destinyTableZone - 1
             : destinyTableZone;
-        console.log("NEW POSITION", newPosition);
+
         await updateTablePositionFromDashboard(
           destinyDashboardId,
           tableId,
           newPosition
         );
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        window.location.reload();
       },
     });
   }, []);
