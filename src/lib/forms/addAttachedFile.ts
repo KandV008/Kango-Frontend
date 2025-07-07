@@ -16,7 +16,7 @@ export default async function addAttachedFile(formData: FormData) {
         body: JSON.stringify(attachedFile),
     });
 
-    if (!res.ok) {
+    if (res.status !== 204) {
         console.error("Error adding file:", await res.text());
         toast.error(`Error adding file: ${await res.text()}`);
     }

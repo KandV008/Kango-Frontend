@@ -28,10 +28,6 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
     card.tagList.some((t) => t.id === tag.id)
   );
 
-  //const tagsOutside = allTags.filter(
-  //  (tag) => !card.tagList.some((t) => t.id === tag.id)
-  //);
-
   const tagListName = "tag-input-";
 
   useEffect(() => {
@@ -73,10 +69,11 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
           body: JSON.stringify(tag),
         }
       );
-      if (!response.ok) {
-        console.error("Error adding tag:", tag,"to card:", card.id);
+
+      if (response.status !== 204) {
+        console.error("Error adding tag:", tag, "to card:", card.id);
         toast.error(`Error adding tag to card`);
-        return 
+        return;
       }
 
       toast.success(`Tag added to card successfully`);
@@ -94,10 +91,10 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
         }
       );
 
-      if (!response.ok) {
-        console.error("Error removing tag:", tag,"from card:", card.id);
+      if (response.status !== 204) {
+        console.error("Error removing tag:", tag, "from card:", card.id);
         toast.error(`Error removing tag from card`);
-        return
+        return;
       }
 
       toast.success(`Tag removed from card successfully`);
@@ -111,9 +108,13 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
           <>
             {card.tagList.map((tag) => {
               const tagColor = getDataColor(tag.color ? tag.color : "BLACK");
-              const textColor = tag.color === "BLACK" ? "text-white" : "text-black"
+              const textColor =
+                tag.color === "BLACK" ? "text-white" : "text-black";
               return (
-                <Badge className={`px-2 border border-black ${textColor}`} style={{ backgroundColor: "#" + tagColor.hex }}>
+                <Badge
+                  className={`px-2 border border-black ${textColor}`}
+                  style={{ backgroundColor: "#" + tagColor.hex }}
+                >
                   {tag.label}
                 </Badge>
               );

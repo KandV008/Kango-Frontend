@@ -14,7 +14,6 @@ interface componentProps {
 }
 
 function UpdateCardFileForm({ card }: componentProps) {
-    console.log("CARD", card)
   const addFileToCardAction = async (formData: FormData) => {
     try {
       const check: AttachedFileProps = {
@@ -33,7 +32,7 @@ function UpdateCardFileForm({ card }: componentProps) {
         }
       );
 
-      if (!response.ok) {
+      if (response.status !== 204) {
         throw new Error(
           `Failed to add file to card (status: ${response.status})`
         );
@@ -74,7 +73,12 @@ function UpdateCardFileForm({ card }: componentProps) {
         {card.attachedFiled && card.attachedFiled.length !== 0 ? (
           <>
             {card.attachedFiled.map((check, index) => (
-              <AttachedFile key={"file-" + index} attachedFile={check} cardId={card.id.toString()} mode="CARD"/>
+              <AttachedFile
+                key={"file-" + index}
+                attachedFile={check}
+                cardId={card.id.toString()}
+                mode="CARD"
+              />
             ))}
           </>
         ) : (

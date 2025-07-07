@@ -33,7 +33,7 @@ function CheckComponent({ check, cardId }: componentProps) {
         }
       );
 
-      if (!response.ok) {
+    if (response.status !== 204) {
         throw new Error(`Failed to remove check (status: ${response.status})`);
       }
 

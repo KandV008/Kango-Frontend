@@ -3,5 +3,5 @@ export interface CardDTO {
     description?: string;
     cardType?: string;
     color?: string;
-    deadLine?: Date;
+    deadLine?: Date | null;
 }

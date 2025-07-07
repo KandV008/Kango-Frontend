@@ -11,27 +11,13 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { toast } from "sonner";
-import { Eye, Trash } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-} from "../ui/dialog";
+import { Trash } from "lucide-react";
 import { getDataColor } from "@/model/utils/color";
 import type { CardEntity } from "@/model/card/card";
 import { useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import UpdateCardTitleForm from "../forms/card/updateCardTitleForm";
-import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import UpdateCardColorForm from "../forms/card/updateCardColorForm";
-import UpdateCardDescriptionForm from "../forms/card/updateCardDescriptionForm";
-import UpdateCardTagsForm from "../forms/card/updateCardTagsForm";
-import UpdateCardFileForm from "../forms/card/updateCardFilesForm";
-import UpdateCardCheckForm from "../forms/card/updateCardCheckForm";
-import { Separator } from "../ui/separator";
+import AboutCard from "../about/AboutCard";
 
 interface componentProps {
   card: CardEntity;
@@ -106,60 +92,7 @@ function Card({ card, dashboardId }: componentProps) {
       {/* Actions */}
       <section className="flex flex-row gap-1">
         {/* See Card */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Eye />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            {/* Header */}
-            <DialogTitle>
-              <DialogHeader className="flex flex-row">
-                {/* Color */}
-                <UpdateCardColorForm card={card} />
-                {/* Base Info */}
-                <div className="flex flex-col items-center justify-around w-full ">
-                  {/* Title */}
-                  <UpdateCardTitleForm card={card} />
-                  {/* Card Type */}
-                  <h2>{card.cardType}</h2>
-                </div>
-                {/* Other Info */}
-                <div className="flex flex-col items-center justify-around w-full ">
-                  {/* Delete */}
-                  <div>TODO</div>
-                  {/* Card Type */}
-                  <h2>
-                    {card.deadLine ? (
-                      <>{card.deadLine.toISOString()}</>
-                    ) : (
-                      <em className="w-full text-center ">
-                        This Card doesn't have a deadline.
-                      </em>
-                    )}
-                  </h2>
-                </div>
-              </DialogHeader>
-            </DialogTitle>
-            <Separator />
-            {/* Body */}
-            <DialogDescription className="grid gap-2">
-              {/* Description */}
-              <UpdateCardDescriptionForm card={card} />
-              {/* Tags */}
-              <UpdateCardTagsForm card={card} dashboardId={dashboardId} />
-            </DialogDescription>
-            <Separator />
-            {/* Footer */}
-            <DialogFooter>
-              {/* Checks */}
-              <UpdateCardCheckForm card={card} />
-              {/* Attached Files */}
-              <UpdateCardFileForm card={card} />
-            </DialogFooter>
-          </DialogContent>{" "}
-        </Dialog>
+        <AboutCard card={card} dashboardId={dashboardId} />
         {/* Delete Card */}
         <AlertDialog>
           <AlertDialogTrigger asChild>

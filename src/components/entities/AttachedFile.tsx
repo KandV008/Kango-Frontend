@@ -21,7 +21,12 @@ interface componentProps {
   mode?: "DASHBOARD" | "CARD";
 }
 
-function AttachedFile({ attachedFile, dashboardId, cardId, mode = "DASHBOARD"}: componentProps) {
+function AttachedFile({
+  attachedFile,
+  dashboardId,
+  cardId,
+  mode = "DASHBOARD",
+}: componentProps) {
   const dettachFileAction = async () => {
     const actionId = mode === "DASHBOARD" ? dashboardId : cardId;
     const entityRoute = mode === "DASHBOARD" ? "dashboards" : "cards";
@@ -37,7 +42,7 @@ function AttachedFile({ attachedFile, dashboardId, cardId, mode = "DASHBOARD"}: 
         }
       );
 
-      if (!response.ok) {
+      if (response.status !== 204) {
         throw new Error(`Failed to detach file (status: ${response.status})`);
       }
 
@@ -58,7 +63,7 @@ function AttachedFile({ attachedFile, dashboardId, cardId, mode = "DASHBOARD"}: 
       <section className="flex flex-row gap-1">
         {/* Access tpo File */}
         <Button asChild>
-          <a href={attachedFile.fileUrl} target="_blank" >
+          <a href={attachedFile.fileUrl} target="_blank">
             <SquareArrowOutUpRight />
           </a>
         </Button>

@@ -29,7 +29,7 @@ function UpdateCardDescriptionForm({ card }: componentProps) {
         }
       );
 
-      if (!response.ok) {
+      if (response.status !== 204) {
         throw new Error(`Failed to updated card (status: ${response.status})`);
       }
 

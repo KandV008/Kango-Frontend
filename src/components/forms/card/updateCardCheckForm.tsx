@@ -31,7 +31,7 @@ function UpdateCardCheckForm({ card }: componentProps) {
         }
       );
 
-      if (!response.ok) {
+      if (response.status !== 204) {
         throw new Error(
           `Failed to add check to card (status: ${response.status})`
         );
@@ -77,7 +77,11 @@ function UpdateCardCheckForm({ card }: componentProps) {
         {card.checks && card.checks.length !== 0 ? (
           <>
             {card.checks.map((check, index) => (
-              <CheckComponent key={"check-" + index} check={check} cardId={card.id.toString()} />
+              <CheckComponent
+                key={"check-" + index}
+                check={check}
+                cardId={card.id.toString()}
+              />
             ))}
           </>
         ) : (

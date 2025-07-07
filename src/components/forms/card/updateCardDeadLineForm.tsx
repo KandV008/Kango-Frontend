@@ -1,25 +1,40 @@
 import { Label } from "../../ui/label";
-import { Input } from "../../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Button } from "../../ui/button";
 import { Pen } from "lucide-react";
 import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
+import { InputCalendar } from "@/components/inputs/InputCalendar";
 
 interface componentProps {
   card: CardEntity;
 }
 
-function UpdateCardTitleForm({ card }: componentProps) {
+function UpdateCardDeadLineForm({ card }: componentProps) {
+  const getFormattedDate = (date: Date) => {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const udpateCardTitleAction = async (formData: FormData) => {
     try {
+      const rawDate = formData.get("dead-line");
+      const parsedDate = rawDate ? new Date(rawDate.toString()) : null;
+
       const cardDTO: CardDTO = {
-        title: formData.get("title")?.toString(),
+        deadLine: parsedDate,
       };
 
+      console.log("RAW DATE", rawDate)
+      console.log("PARSE DATE", parsedDate)
+      console.log("DTO", cardDTO)
+
       const response = await fetch(
-        `http://localhost:8080/api/cards/${card.id}/title`,
+        `http://localhost:8080/api/cards/${card.id}/deadline`,
         {
           method: "PUT",
           headers: {
@@ -43,17 +58,20 @@ function UpdateCardTitleForm({ card }: componentProps) {
   return (
     <Popover>
       <PopoverTrigger className="w-full">
-        <h1 className="w-full hover:bg-gray-200">{card.title}</h1>
+        <h2 className="grid items-center hover:bg-gray-200">
+          {card.deadLine ? (
+            <>{getFormattedDate(card.deadLine)}</>
+          ) : (
+            <em className="justify-center w-full text-center self">
+              This Card doesn't have a deadline.
+            </em>
+          )}
+        </h2>{" "}
       </PopoverTrigger>
-      <PopoverContent side="top">
+      <PopoverContent side="right">
         <form action={udpateCardTitleAction} className="grid w-full gap-2">
-          <Label htmlFor="title-input">Update Card's Title</Label>
-          <Input
-            id="title-input"
-            name="title"
-            defaultValue=""
-            placeholder="Card X"
-          />
+          <Label htmlFor="title-input">Update Card's DeadLine</Label>
+          <InputCalendar currentDate={card.deadLine} />
           <Button type="submit">
             <Pen /> Update
           </Button>
@@ -63,4 +81,4 @@ function UpdateCardTitleForm({ card }: componentProps) {
   );
 }
 
-export default UpdateCardTitleForm;
+export default UpdateCardDeadLineForm;
