@@ -364,7 +364,7 @@ function Table({ table, tables }: componentProps) {
         </article>
       </section>
       {/* CardList */}
-      <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-auto">
+      <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden">
         {/* Action Add Card */}
         <article className="grid justify-end w-full">
           <Dialog>
@@ -413,7 +413,7 @@ function Table({ table, tables }: componentProps) {
           </Dialog>
         </article>
         {/* All Cards */}
-        <article className="grid gap-2">
+        <article className="grid w-full gap-2 overflow-y-scroll h-max">
           <DropZone zone={0} destination={table.id} type={"CARD"} />
           {cardList.map((card) => (
             <div className="grid gap-2" key={"card-" + card.id}>

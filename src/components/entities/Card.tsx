@@ -79,7 +79,7 @@ function Card({ card, dashboardId }: componentProps) {
   }, [cardId, position, tableId]);
 
   const baseCardStyle =
-    "flex flex-col items-start justify-between w-full h-36 gap-2 m-auto border-2 rounded-2xl";
+    "flex flex-col items-start justify-between w-68 h-36 gap-2 m-auto border-2 rounded-2xl";
   const dragCardStyle = dragging
     ? "border-gray-700 bg-gray-200 text-gray-600"
     : "border-black text-black";
