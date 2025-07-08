@@ -41,11 +41,14 @@ function DashboardPage() {
 
   return (
     <main className="flex flex-row h-screen">
-      <SideBar isSideBarOpen={sidebarOpen} removeSideBar={() => setSidebarOpen(false) } />
-      <div className="flex flex-col w-full">
-        <Header toggleSideBar={() => setSidebarOpen(prev => !prev)} />
-        <div className="flex-1 overflow-hidden">
-          <TableList tables={dashboard!.tableList} />
+      <SideBar
+        isSideBarOpen={sidebarOpen}
+        removeSideBar={() => setSidebarOpen(false)}
+      />
+      <div className="flex flex-col overflow-hidden">
+        <Header toggleSideBar={() => setSidebarOpen((prev) => !prev)} />
+        <div className="h-full min-w-full overflow-x-scroll">
+            <TableList tables={dashboard!.tableList} />
         </div>
       </div>
     </main>

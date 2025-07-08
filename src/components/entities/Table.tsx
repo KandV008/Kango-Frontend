@@ -207,7 +207,7 @@ function Table({ table, tables }: componentProps) {
   }, [tableId, position, dashboardId]);
 
   const baseCardStyle =
-    "flex flex-col items-start h-full gap-2 px-2 py-1 border-2 rounded-b-md w-80 rounded-t-2xl";
+    "flex flex-col items-start gap-2 px-2 py-1 border-2 rounded-b-md w-80 rounded-t-2xl";
   const dragCardStyle = dragging
     ? "border-gray-700 bg-gray-200 text-gray-600"
     : "border-black text-black";
@@ -215,7 +215,7 @@ function Table({ table, tables }: componentProps) {
   return (
     <article
       ref={ref}
-      className={`${baseCardStyle} ${dragCardStyle} grow h-full max-h-full`}
+      className={`${baseCardStyle} ${dragCardStyle} grow `}
     >
       {/* Header */}
       <section className="flex flex-row items-center justify-between w-full gap-2 p-2 border-b-2 border-black h-fit">

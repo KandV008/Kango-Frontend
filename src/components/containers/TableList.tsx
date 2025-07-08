@@ -12,38 +12,28 @@ interface componentProps {
 function TableList({ tables }: componentProps) {
   const tableList = [...tables].sort((a, b) => a.position - b.position);
 
-  /* Monitoring Drag & Drop Logic */
   useEffect(() => {
     return monitorForElements({
       async onDrop({ source, location }) {
         const destination = location.current.dropTargets[0];
-        if (!destination) {
-          return;
-        }
+        if (!destination) return;
 
         const typeDropZone = destination.data.type;
         const typeElement = source.data.type;
 
-        if (typeElement !== "TABLE" || typeElement !== typeDropZone) {
-          return;
-        }
+        if (typeElement !== "TABLE" || typeElement !== typeDropZone) return;
 
         const destinyDashboardId = Number(destination.data.destination);
         const destinyTableZone = Number(destination.data.zone);
-
         const tablePosition = Number(source.data.position);
         const tableId = Number(source.data.table);
 
-        const isNotNecessaryToMove =
-          destinyTableZone === tablePosition ||
-          destinyTableZone === tablePosition;
+        const isNotNecessaryToMove = destinyTableZone === tablePosition;
 
-        if (isNotNecessaryToMove) {
-          return;
-        }
+        if (isNotNecessaryToMove) return;
 
         const newPosition =
-          tablePosition - destinyTableZone < 0
+          tablePosition < destinyTableZone
             ? destinyTableZone - 1
             : destinyTableZone;
 
@@ -60,25 +50,23 @@ function TableList({ tables }: componentProps) {
   }, []);
 
   return (
-    <section className="flex flex-row items-center justify-start gap-5 p-5 size-full ">
-      {tableList.length !== 0 ? (
+    <div className="flex flex-row h-full gap-2 p-5 ">
+      {tableList.length !== 0 && (
         <>
-          <DropZone zone={0} destination={tables[0].dashboard} type={"TABLE"} />
+          <DropZone zone={0} destination={tables[0].dashboard} type="TABLE" />
           {tableList.map((table) => (
             <div className="flex flex-row h-full gap-2" key={table.id}>
               <Table table={table} tables={tables} />
               <DropZone
                 zone={table.position + 1}
                 destination={table.dashboard}
-                type={"TABLE"}
+                type="TABLE"
               />
             </div>
           ))}
         </>
-      ) : (
-        <></>
       )}
-    </section>
+    </div>
   );
 }
 

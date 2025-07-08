@@ -67,7 +67,7 @@ function Header({ toggleSideBar }: componentProps) {
   }, [id]);
 
   return (
-    <section className="flex flex-row items-center justify-between w-full h-12 px-5 border-b-2 border-gray-200 ">
+    <section className="flex flex-row items-center justify-between h-12 px-5 border-b-2 border-gray-200 grow-0 ">
       {/* Toggle Side Bar */}
       <Button variant={"outline"}
         className="md:hidden top-4 left-4"
