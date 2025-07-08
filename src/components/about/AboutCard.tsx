@@ -32,7 +32,7 @@ function AboutCard({ card, dashboardId }: componentProps) {
           <Eye />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent >
         {/* Header */}
         <DialogTitle>
           <DialogHeader className="flex flex-row">

@@ -25,14 +25,17 @@ import {
 } from "../ui/dialog";
 import TagForm from "../forms/tagForm";
 import updateTag from "@/lib/forms/tag/updateTag";
-import { getDataColor } from "@/model/utils/color";
+import { colorValueOf, getDataColor, type Color } from "@/model/utils/color";
+import { useState } from "react";
 
 interface componentProps {
   tag: TagEntity;
 }
 
 function Tag({ tag }: componentProps) {
-  const tagColor = getDataColor(tag.color ? tag.color : "BLACK");
+  const [label, setLabel] = useState<string>(tag.label);
+  const [color, setColor] = useState<Color>(tag.color ? tag.color : "BLACK");
+  const tagColor = getDataColor(color);
 
   const deleteTagAction = async () => {
     try {
@@ -51,6 +54,16 @@ function Tag({ tag }: componentProps) {
     }
   };
 
+  const handleUpdateAction = async (formData: FormData) => {
+    await updateTag(formData);
+
+    const newLabel = formData.get("label")?.toString();
+    setLabel(newLabel ? newLabel : "");
+    const newColor = formData.get("color")?.toString();
+    const valueOfColor = colorValueOf(newColor!);
+    setColor(valueOfColor);
+  };
+
   return (
     <article className="flex flex-row items-start justify-between w-full gap-2 p-4 m-auto border-2 border-black rounded-2xl">
       {/* Info */}
@@ -59,7 +72,7 @@ function Tag({ tag }: componentProps) {
           className="size-10 rounded-xl"
           style={{ backgroundColor: "#" + tagColor.hex }}
         />
-        <h1>{tag.label ? tag.label : <em>Empty label</em>}</h1>
+        <h1>{label ? label : <em>Empty label</em>}</h1>
       </section>
       {/* Actions */}
       <section className="flex flex-row gap-1">
@@ -71,7 +84,7 @@ function Tag({ tag }: componentProps) {
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
-            <form action={updateTag} className="grid gap-5">
+            <form action={handleUpdateAction} className="grid gap-5">
               <DialogHeader>
                 <DialogTitle>Update Tag</DialogTitle>
                 <DialogDescription>
@@ -83,7 +96,9 @@ function Tag({ tag }: componentProps) {
                 <DialogClose asChild>
                   <Button variant="outline">Cancel</Button>
                 </DialogClose>
-                <Button type="submit">Update Tag</Button>
+                <DialogClose asChild>
+                  <Button type="submit">Update Tag</Button>
+                </DialogClose>
               </DialogFooter>
             </form>
           </DialogContent>{" "}

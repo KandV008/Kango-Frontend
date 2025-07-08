@@ -8,7 +8,6 @@ interface componentProps {
 }
 
 function TagForm({ tag }: componentProps) {
-    console.log("TAG:", tag)
   return (
     <div className="grid gap-4">
         {tag ? <Input type="hidden" name="id" value={tag.id}/> : <></>}
