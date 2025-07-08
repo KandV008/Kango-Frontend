@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-popover";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Eye, File, Plus } from "lucide-react";
+import { Eye, File, Menu, Plus } from "lucide-react";
 import { useParams } from "react-router-dom";
 import DashboardForm from "../forms/dashboard/dashboardForm";
 import TableForm from "../forms/table/tableForm";
@@ -29,7 +29,11 @@ import { useEffect, useState } from "react";
 import { DashboardEntity } from "@/model/dashboard/dashboard";
 import UpdateDashboardNameForm from "../forms/dashboard/updateDashboardNameForm";
 
-function Header() {
+interface componentProps{
+  toggleSideBar: () => void
+}
+
+function Header({ toggleSideBar }: componentProps) {
   const { id } = useParams();
   const isDashboardPage = id !== undefined;
   const [dashboard, setDashboard] = useState<DashboardEntity | null>(null);
@@ -64,6 +68,13 @@ function Header() {
 
   return (
     <section className="flex flex-row items-center justify-between w-full h-12 px-5 border-b-2 border-gray-200 ">
+      {/* Toggle Side Bar */}
+      <Button variant={"outline"}
+        className="md:hidden top-4 left-4"
+        onClick={toggleSideBar}
+      >
+        <Menu />
+      </Button>
       {/* App Name */}
       <Label>Kango</Label>
       {/* Dashboard Name */}
@@ -80,7 +91,7 @@ function Header() {
       ) : (
         <></>
       )}
-      {/* Attached Files */}
+      {/* Actions */}
       <article className="flex flex-row gap-2">
         {/* Handle Attached Files */}
         {isDashboardPage ? (
@@ -152,7 +163,10 @@ function Header() {
         <Popover>
           <PopoverTrigger>
             <Button>
-              <Plus /> Create {isDashboardPage ? "Table" : "Dashboard"}
+              <Plus /> <p className="hidden lg:block">Create</p>{" "}
+              <p className="hidden sm:block">
+                {isDashboardPage ? "Table" : "Dashboard"}
+              </p>
             </Button>
           </PopoverTrigger>
           <PopoverPortal>

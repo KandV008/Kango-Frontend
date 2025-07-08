@@ -1,12 +1,4 @@
-import {
-  CircleQuestionMark,
-  CreditCard,
-  Eye,
-  Home,
-  Plus,
-  Settings,
-  Tag,
-} from "lucide-react";
+import { BadgePlus, CircleQuestionMark, Eye, Home, Plus } from "lucide-react";
 
 import {
   Sidebar,
@@ -43,19 +35,38 @@ import { Input } from "../ui/input";
 import createLocalTemplateCard from "@/lib/forms/card/createLocalTemplateCard";
 import createLocalTag from "@/lib/forms/tag/createLocalTag";
 
-function SideBar() {
+interface componentProps {
+  isSideBarOpen: boolean;
+  removeSideBar: () => void;
+}
+
+function SideBar({ isSideBarOpen, removeSideBar }: componentProps) {
   const { id } = useParams();
   const isDashboardPage = id !== undefined;
 
   return (
-    <section>
+    <section className="">
+      {isSideBarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+          onClick={removeSideBar}
+        />
+      )}
       <SidebarProvider>
-        <Sidebar>
+        <Sidebar
+          collapsible="none"
+          className={`fixed top-0 left-0 h-dvh z-40  shadow transition-transform duration-300 md:static ${
+            isSideBarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0`}
+        >
+          {" "}
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Application</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-lg font-semibold underline underline-offset-2">
+                Actions
+              </SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="grid gap-5">
                   {/* Home */}
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
@@ -66,239 +77,197 @@ function SideBar() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   {/* Template Card */}
-                  <SidebarMenuItem>
-                    {/* Header */}
-                    <SidebarMenuButton asChild>
-                      <a>
-                        <CreditCard />
-                        <span>Card Templates</span>
-                      </a>
-                    </SidebarMenuButton>
-                    {/* Options */}
-                    <SidebarGroupContent className="pl-10">
-                      {/* Create Global Template Card */}
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <SidebarMenuSubButton asChild>
-                            <a>
-                              <Plus />
-                              <span>
-                                {isDashboardPage
-                                  ? "Create Global Template"
-                                  : "Create Card Template"}
-                              </span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <form
-                            action={createGlobalTemplateCard}
-                            className="grid gap-5"
-                          >
-                            <DialogHeader>
-                              <DialogTitle>
-                                Create Global Card Template
-                              </DialogTitle>
-                              <DialogDescription>
-                                Set the attributes of the new Global Card
-                                Template
-                              </DialogDescription>
-                            </DialogHeader>
-                            <CardForm />
-                            <DialogFooter>
-                              <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
-                              </DialogClose>
-                              <Button type="submit">
-                                Create Card Template
-                              </Button>
-                            </DialogFooter>
-                          </form>
-                        </DialogContent>{" "}
-                      </Dialog>
-                      {/* Create Local Template Card */}
-                      <Dialog>
-                        {isDashboardPage ? (
-                          <DialogTrigger asChild>
-                            <SidebarMenuSubButton asChild>
-                              <a>
-                                <Plus />
-                                <span>Create Local Template</span>
-                              </a>
-                            </SidebarMenuSubButton>
-                          </DialogTrigger>
-                        ) : (
-                          <></>
-                        )}
-                        <DialogContent className="sm:max-w-[425px]">
-                          <form
-                            action={createLocalTemplateCard}
-                            className="grid gap-5"
-                          >
-                            <Input
-                              type="hidden"
-                              value={id}
-                              name="dashboard_id"
-                            />
-                            <DialogHeader>
-                              <DialogTitle>
-                                Create Local Card Template
-                              </DialogTitle>
-                              <DialogDescription>
-                                Set the attributes of the new Local Card
-                                Template
-                              </DialogDescription>
-                            </DialogHeader>
-                            <CardForm />
-                            <DialogFooter>
-                              <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
-                              </DialogClose>
-                              <Button type="submit">
-                                Create Card Template
-                              </Button>
-                            </DialogFooter>
-                          </form>
-                        </DialogContent>{" "}
-                      </Dialog>
-                      {/* See Template Cards */}
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <SidebarMenuSubButton asChild>
-                            <a>
-                              <Eye />
-                              <span>See Card Templates</span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
+                  <SidebarMenuItem className="grid gap-2">
+                    {/* Create Global Template Card */}
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <SidebarMenuSubButton asChild>
+                          <a>
+                            <Plus />
+                            <span>
+                              {isDashboardPage
+                                ? "Create Global Template"
+                                : "Create Card Template"}
+                            </span>
+                          </a>
+                        </SidebarMenuSubButton>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <form
+                          action={createGlobalTemplateCard}
+                          className="grid gap-5"
+                        >
                           <DialogHeader>
-                            <DialogTitle>See all Card Templates</DialogTitle>
+                            <DialogTitle>
+                              Create Global Card Template
+                            </DialogTitle>
                             <DialogDescription>
-                              It will show all the available card templates,
-                              with the posibility to update or delete them.
+                              Set the attributes of the new Global Card Template
                             </DialogDescription>
                           </DialogHeader>
-                          <TemplateCardList dashboardId={id} />
-                        </DialogContent>
-                      </Dialog>
-                    </SidebarGroupContent>
+                          <CardForm />
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Create Card Template</Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>{" "}
+                    </Dialog>
+                    {/* Create Local Template Card */}
+                    <Dialog>
+                      {isDashboardPage ? (
+                        <DialogTrigger asChild>
+                          <SidebarMenuSubButton asChild>
+                            <a>
+                              <BadgePlus />
+                              <span>Create Local Template</span>
+                            </a>
+                          </SidebarMenuSubButton>
+                        </DialogTrigger>
+                      ) : (
+                        <></>
+                      )}
+                      <DialogContent className="sm:max-w-[425px]">
+                        <form
+                          action={createLocalTemplateCard}
+                          className="grid gap-5"
+                        >
+                          <Input type="hidden" value={id} name="dashboard_id" />
+                          <DialogHeader>
+                            <DialogTitle>
+                              Create Local Card Template
+                            </DialogTitle>
+                            <DialogDescription>
+                              Set the attributes of the new Local Card Template
+                            </DialogDescription>
+                          </DialogHeader>
+                          <CardForm />
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Create Card Template</Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>{" "}
+                    </Dialog>
+                    {/* See Template Cards */}
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <SidebarMenuSubButton asChild>
+                          <a>
+                            <Eye />
+                            <span>See Card Templates</span>
+                          </a>
+                        </SidebarMenuSubButton>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>See all Card Templates</DialogTitle>
+                          <DialogDescription>
+                            It will show all the available card templates, with
+                            the posibility to update or delete them.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <TemplateCardList dashboardId={id} />
+                      </DialogContent>
+                    </Dialog>
                   </SidebarMenuItem>
                   {/* Tag */}
-                  <SidebarMenuItem>
-                    {/* Header */}
-                    <SidebarMenuButton asChild>
-                      <a>
-                        <Tag />
-                        <span>Tags</span>
-                      </a>
-                    </SidebarMenuButton>
-                    {/* Options */}
-                    <SidebarGroupContent className="pl-10">
-                      {/* Create Globabl Tag */}
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <SidebarMenuSubButton asChild>
-                            <a>
-                              <Plus />
-                              <span>Create Global Tag</span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <form action={createGlobalTag} className="grid gap-5">
-                            <DialogHeader>
-                              <DialogTitle>Create Global Tag</DialogTitle>
-                              <DialogDescription>
-                                Set the attributes of the new Global Tag
-                              </DialogDescription>
-                            </DialogHeader>
-                            <TagForm />
-                            <DialogFooter>
-                              <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
-                              </DialogClose>
-                              <Button type="submit">Create Tag</Button>
-                            </DialogFooter>
-                          </form>
-                        </DialogContent>{" "}
-                      </Dialog>
-                      {/* Create Local Tag */}
-                      <Dialog>
-                        {isDashboardPage ? (
-                          <DialogTrigger asChild>
-                            <SidebarMenuSubButton asChild>
-                              <a>
-                                <Plus />
-                                <span>Create Local Tag</span>
-                              </a>
-                            </SidebarMenuSubButton>
-                          </DialogTrigger>
-                        ) : (
-                          <></>
-                        )}
-                        <DialogContent className="sm:max-w-[425px]">
-                          <form action={createLocalTag} className="grid gap-5">
-                            <Input
-                              type="hidden"
-                              value={id}
-                              name="dashboard_id"
-                            />
-                            <DialogHeader>
-                              <DialogTitle>Create Local Tag</DialogTitle>
-                              <DialogDescription>
-                                Set the attributes of the new Local Tag
-                              </DialogDescription>
-                            </DialogHeader>
-                            <TagForm />
-                            <DialogFooter>
-                              <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
-                              </DialogClose>
-                              <Button type="submit">Create Tag</Button>
-                            </DialogFooter>
-                          </form>
-                        </DialogContent>{" "}
-                      </Dialog>
-                      {/* See Tag */}
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <SidebarMenuSubButton asChild>
-                            <a>
-                              <Eye />
-                              <span>See Tags</span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
+                  <SidebarMenuItem className="grid gap-2">
+                    {/* Create Globabl Tag */}
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <SidebarMenuSubButton asChild>
+                          <a>
+                            <Plus />
+                            <span>Create Global Tag</span>
+                          </a>
+                        </SidebarMenuSubButton>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <form action={createGlobalTag} className="grid gap-5">
                           <DialogHeader>
-                            <DialogTitle>See all Tags</DialogTitle>
+                            <DialogTitle>Create Global Tag</DialogTitle>
                             <DialogDescription>
-                              It will show all the available tags, with the
-                              posibility to update or delete them.
+                              Set the attributes of the new Global Tag
                             </DialogDescription>
                           </DialogHeader>
-                          <TagList dashboardId={id} />
-                        </DialogContent>
-                      </Dialog>
-                    </SidebarGroupContent>
+                          <TagForm />
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Create Tag</Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>{" "}
+                    </Dialog>
+                    {/* Create Local Tag */}
+                    <Dialog>
+                      {isDashboardPage ? (
+                        <DialogTrigger asChild>
+                          <SidebarMenuSubButton asChild>
+                            <a>
+                              <BadgePlus />
+                              <span>Create Local Tag</span>
+                            </a>
+                          </SidebarMenuSubButton>
+                        </DialogTrigger>
+                      ) : (
+                        <></>
+                      )}
+                      <DialogContent className="sm:max-w-[425px]">
+                        <form action={createLocalTag} className="grid gap-5">
+                          <Input type="hidden" value={id} name="dashboard_id" />
+                          <DialogHeader>
+                            <DialogTitle>Create Local Tag</DialogTitle>
+                            <DialogDescription>
+                              Set the attributes of the new Local Tag
+                            </DialogDescription>
+                          </DialogHeader>
+                          <TagForm />
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Create Tag</Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>{" "}
+                    </Dialog>
+                    {/* See Tag */}
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <SidebarMenuSubButton asChild>
+                          <a>
+                            <Eye />
+                            <span>See Tags</span>
+                          </a>
+                        </SidebarMenuSubButton>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>See all Tags</DialogTitle>
+                          <DialogDescription>
+                            It will show all the available tags, with the
+                            posibility to update or delete them.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <TagList dashboardId={id} />
+                      </DialogContent>
+                    </Dialog>
                   </SidebarMenuItem>
                   {/* Configuration */}
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
+                  <SidebarMenuItem className="grid gap-2">
+                    <SidebarMenuSubButton asChild>
                       <a>
-                        <Settings />
-                        <span>Configuration</span>
+                        <CircleQuestionMark />
+                        <span>[...]</span>
                       </a>
-                    </SidebarMenuButton>
-                    <SidebarGroupContent className="pl-10">
-                      <SidebarMenuSubButton asChild>
-                        <a>
-                          <CircleQuestionMark />
-                          <span>[...]</span>
-                        </a>
-                      </SidebarMenuSubButton>
-                    </SidebarGroupContent>
+                    </SidebarMenuSubButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>

@@ -53,7 +53,8 @@ function UpdateDashboardNameForm({ dashboard, updatedAction }: componentProps) {
     <Popover>
       <PopoverTrigger className="w-full">
         <Button>
-          <Pen /> Update
+          <Pen />
+          <p className="hidden lg:block">Update</p>
         </Button>
       </PopoverTrigger>
       <PopoverContent side="top">
