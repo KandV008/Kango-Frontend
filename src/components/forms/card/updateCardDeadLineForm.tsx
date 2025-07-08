@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
 import { InputCalendar } from "@/components/inputs/InputCalendar";
 import { useState } from "react";
+import { getFormattedDate } from "@/lib/utils";
 
 interface componentProps {
   card: CardEntity;
@@ -15,13 +16,6 @@ interface componentProps {
 function UpdateCardDeadLineForm({ card }: componentProps) {
   const [deadLine, setDeadLine] = useState<Date | null>(card.deadLine);
 
-  const getFormattedDate = (date: Date) => {
-    const d = new Date(date);
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
 
   const udpateCardTitleAction = async (formData: FormData) => {
     try {
