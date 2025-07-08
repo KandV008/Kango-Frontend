@@ -10,6 +10,7 @@ function DashboardPage() {
 
   const [dashboard, setDashboard] = useState<DashboardEntity | null>(null);
   const [isLoading, setLoading] = useState<boolean>(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -40,9 +41,9 @@ function DashboardPage() {
 
   return (
     <main className="flex flex-row h-screen">
-      <SideBar />
+      <SideBar isSideBarOpen={sidebarOpen} removeSideBar={() => setSidebarOpen(false) } />
       <div className="flex flex-col w-full">
-        <Header />
+        <Header toggleSideBar={() => setSidebarOpen(prev => !prev)} />
         <div className="flex-1 overflow-hidden">
           <TableList tables={dashboard!.tableList} />
         </div>
