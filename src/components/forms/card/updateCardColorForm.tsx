@@ -8,13 +8,14 @@ import type { CardDTO } from "@/model/card/cardDTO";
 import { colorValueOf, getDataColor, type Color } from "@/model/utils/color";
 import { InputColor } from "@/components/inputs/InputColor";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface componentProps {
   card: CardEntity;
 }
 
 function UpdateCardColorForm({ card }: componentProps) {
-  const [color, setColor] = useState<Color>(card.color ? card.color : "BLACK")
+  const [color, setColor] = useState<Color>(card.color ? card.color : "BLACK");
   const cardColor = getDataColor(color);
 
   const udpateCardColorAction = async (formData: FormData) => {
@@ -40,8 +41,8 @@ function UpdateCardColorForm({ card }: componentProps) {
 
       toast.success("Card has been updated.");
 
-      const newColor: Color = colorValueOf(cardDTO.color!)
-      setColor(newColor)
+      const newColor: Color = colorValueOf(cardDTO.color!);
+      setColor(newColor);
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");
@@ -49,25 +50,46 @@ function UpdateCardColorForm({ card }: componentProps) {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger className="size-24 rounded-xl">
-        <div
-          className="flex items-center justify-center text-transparent size-full rounded-xl hover:text-gray-200"
-          style={{ backgroundColor: "#" + cardColor.hex }}
-        >
-          <Pen />
-        </div>
-      </PopoverTrigger>
-      <PopoverContent side="left">
-        <form action={udpateCardColorAction} className="grid w-full gap-2">
-          <Label htmlFor="color-input">Update Card's Color</Label>
-          <InputColor />
-          <Button type="submit">
-            <Pen /> Update
-          </Button>
-        </form>
-      </PopoverContent>
-    </Popover>
+    <>
+      <Popover>
+        <PopoverTrigger className="hidden sm:block size-16 sm:size-24 rounded-xl">
+          <div
+            className="flex items-center justify-center text-transparent size-full rounded-xl hover:text-gray-200"
+            style={{ backgroundColor: "#" + cardColor.hex }}
+          >
+            <Pen />
+          </div>
+        </PopoverTrigger>
+        <PopoverContent side="left">
+          <form action={udpateCardColorAction} className="grid w-full gap-2">
+            <Label htmlFor="color-input">Update Card's Color</Label>
+            <InputColor />
+            <Button type="submit">
+              <Pen /> Update
+            </Button>
+          </form>
+        </PopoverContent>
+      </Popover>
+      <Dialog>
+        <DialogTrigger className="block sm:hidden size-16 sm:size-24 rounded-xl">
+          <div
+            className="flex items-center justify-center text-transparent size-full rounded-xl hover:text-gray-200"
+            style={{ backgroundColor: "#" + cardColor.hex }}
+          >
+            <Pen />
+          </div>
+        </DialogTrigger>
+        <DialogContent className="grid items-center w-fit">
+          <form action={udpateCardColorAction} className="grid gap-2 w-fit">
+            <Label htmlFor="color-input">Update Card's Color</Label>
+            <InputColor />
+            <Button type="submit">
+              <Pen /> Update
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

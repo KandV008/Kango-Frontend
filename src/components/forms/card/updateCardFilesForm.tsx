@@ -9,6 +9,7 @@ import AttachedFile from "@/components/entities/AttachedFile";
 import type { AttachedFileProps } from "@/model/utils/attachedFile";
 import AttachedFileForm from "../attachedFileForm";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface componentProps {
   card: CardEntity;
@@ -64,26 +65,44 @@ function UpdateCardFileForm({ card }: componentProps) {
   };
 
   return (
-    <section className="grid w-full gap-1">
+    <section className="grid w-56 gap-1 sm:w-full place-self-center">
       {/* Header */}
-      <article className="flex flex-row justify-between px-2">
+      <article className="flex flex-row justify-around sm:px-2 sm:justify-between">
         <Label>Attached Files</Label>
-        <Popover>
-          <PopoverTrigger>
-            <Button>
-              <Plus />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent side="right">
-            <form action={addFileToCardAction} className="grid w-full gap-2">
-              <Label htmlFor="file-input">Add new check</Label>
-              <AttachedFileForm />
-              <Button type="submit">
-                <Plus /> Add File
+        <>
+          <Popover>
+            <PopoverTrigger className="hidden sm:block">
+              <Button>
+                <Plus />
               </Button>
-            </form>
-          </PopoverContent>
-        </Popover>
+            </PopoverTrigger>
+            <PopoverContent side="right">
+              <form action={addFileToCardAction} className="grid w-full gap-2">
+                <Label htmlFor="file-input">Add new check</Label>
+                <AttachedFileForm />
+                <Button type="submit">
+                  <Plus /> Add File
+                </Button>
+              </form>
+            </PopoverContent>
+          </Popover>
+          <Dialog>
+            <DialogTrigger className="block sm:hidden">
+              <Button>
+                <Plus />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="grid items-center w-fit">
+              <form action={addFileToCardAction} className="grid gap-2 w-fit">
+                <Label htmlFor="file-input">Add new check</Label>
+                <AttachedFileForm />
+                <Button type="submit">
+                  <Plus /> Add File
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </>
       </article>
       <Separator />
       {/* Check List */}

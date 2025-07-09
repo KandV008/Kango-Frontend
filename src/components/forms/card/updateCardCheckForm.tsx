@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import type { CheckProps } from "@/model/utils/check";
 import CheckComponent from "@/components/entities/Check";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface componentProps {
   card: CardEntity;
@@ -65,36 +66,60 @@ function UpdateCardCheckForm({ card }: componentProps) {
   };
 
   return (
-    <section className="grid w-full gap-1">
+    <section className="grid self-center w-56 gap-1 sm:w-full">
       {/* Header */}
-      <article className="flex flex-row justify-between px-2">
+      <article className="flex flex-row justify-around sm:justify-between sm:px-2">
         <Label>Check List</Label>
-        <Popover>
-          <PopoverTrigger>
-            <Button>
-              <Plus />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent side="right">
-            <form action={addCheckToCardAction} className="grid w-full gap-2">
-              <Label htmlFor="check-input">Add new check</Label>
-              <Input
-                id="check-input"
-                name="check"
-                defaultValue=""
-                placeholder="Check X"
-                required
-              />{" "}
-              <Button type="submit">
-                <Plus /> Add Check
+        <>
+          <Popover>
+            <PopoverTrigger className="hidden sm:block">
+              <Button>
+                <Plus />
               </Button>
-            </form>
-          </PopoverContent>
-        </Popover>
+            </PopoverTrigger>
+            <PopoverContent side="right">
+              <form action={addCheckToCardAction} className="grid w-full gap-2">
+                <Label htmlFor="check-input">Add new check</Label>
+                <Input
+                  id="check-input"
+                  name="check"
+                  defaultValue=""
+                  placeholder="Check X"
+                  required
+                />{" "}
+                <Button type="submit">
+                  <Plus /> Add Check
+                </Button>
+              </form>
+            </PopoverContent>
+          </Popover>
+          <Dialog>
+            <DialogTrigger className="block sm:hidden">
+              <Button>
+                <Plus />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="grid items-center w-fit">
+              <form action={addCheckToCardAction} className="grid gap-2 w-fit">
+                <Label htmlFor="check-input">Add new check</Label>
+                <Input
+                  id="check-input"
+                  name="check"
+                  defaultValue=""
+                  placeholder="Check X"
+                  required
+                />{" "}
+                <Button type="submit">
+                  <Plus /> Add Check
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </>
       </article>
       <Separator />
       {/* Check List */}
-      <article className="flex flex-col gap-1">
+      <article className="flex flex-col justify-center w-56 gap-1 sm:w-full">
         {currentChecks && currentChecks.length !== 0 ? (
           <>
             {currentChecks.map((check, index) => (

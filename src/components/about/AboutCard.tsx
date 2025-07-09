@@ -12,12 +12,12 @@ import {
 } from "../ui/dialog";
 import UpdateCardColorForm from "../forms/card/updateCardColorForm";
 import UpdateCardTitleForm from "../forms/card/updateCardTitleForm";
-import { Separator } from "@radix-ui/react-separator";
 import UpdateCardDescriptionForm from "../forms/card/updateCardDescriptionForm";
 import UpdateCardTagsForm from "../forms/card/updateCardTagsForm";
 import UpdateCardCheckForm from "../forms/card/updateCardCheckForm";
 import UpdateCardFileForm from "../forms/card/updateCardFilesForm";
 import UpdateCardDeadLineForm from "../forms/card/updateCardDeadLineForm";
+import { Separator } from "../ui/separator";
 
 interface componentProps {
   card: CardEntity;
@@ -32,10 +32,10 @@ function AboutCard({ card, dashboardId }: componentProps) {
           <Eye />
         </Button>
       </DialogTrigger>
-      <DialogContent >
+      <DialogContent>
         {/* Header */}
         <DialogTitle>
-          <DialogHeader className="flex flex-row">
+          <DialogHeader className="hidden sm:flex-row sm:flex">
             {/* Color */}
             <UpdateCardColorForm card={card} />
             {/* Base Info */}
@@ -43,26 +43,38 @@ function AboutCard({ card, dashboardId }: componentProps) {
               {/* Title */}
               <UpdateCardTitleForm card={card} />
               {/* Card Type */}
-              <h2>{card.cardType}</h2>
+              <h2 className="text-sm sm:text-base">{card.cardType}</h2>
             </div>
             {/* Other Info */}
             <div className="flex flex-col items-center justify-around w-full ">
-              {/* Delete */}
-              <div>???</div>
               {/* Dead Line */}
               <UpdateCardDeadLineForm card={card} />
             </div>
           </DialogHeader>
+          <div className="flex flex-row justify-evenly sm:hidden">
+            <div className="flex flex-col items-center w-20 gap-1">
+              {/* Color */}
+              <UpdateCardColorForm card={card} />
+              {/* Card Type */}
+              <h2 className="text-sm sm:text-base">{card.cardType}</h2>
+            </div>
+            <div className="flex flex-col items-center w-20 gap-1">
+              {/* Title */}
+              <UpdateCardTitleForm card={card} />
+              {/* Dead Line */}
+              <UpdateCardDeadLineForm card={card} />
+            </div>
+          </div>
         </DialogTitle>
-        <Separator />
+        <Separator className="hidden sm:block" />
         {/* Body */}
-        <DialogDescription className="grid gap-2">
+        <DialogDescription className="grid gap-1 sm:gap-2">
           {/* Description */}
           <UpdateCardDescriptionForm card={card} />
           {/* Tags */}
           <UpdateCardTagsForm card={card} dashboardId={dashboardId} />
         </DialogDescription>
-        <Separator />
+        <Separator className="hidden sm:block" />
         {/* Footer */}
         <DialogFooter>
           {/* Checks */}

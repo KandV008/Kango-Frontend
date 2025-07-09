@@ -59,7 +59,7 @@ function AttachedFile({
   };
 
   return (
-    <article className="flex flex-row items-start justify-between w-full gap-2 p-4 m-auto border-2 border-black rounded-2xl">
+    <article className="flex flex-row items-start justify-around w-full gap-2 p-2 m-auto border-2 border-black sm:justify-between sm:p-3 md:p-4 rounded-2xl">
       {/* Info */}
       <section className="flex flex-row items-center gap-2 size-full">
         <h1>{attachedFile.fileName}</h1>

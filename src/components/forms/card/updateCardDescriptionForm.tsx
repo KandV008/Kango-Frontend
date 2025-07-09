@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface componentProps {
   card: CardEntity;
@@ -17,7 +18,7 @@ function UpdateCardDescriptionForm({ card }: componentProps) {
 
   const udpateCardDescriptionAction = async (formData: FormData) => {
     try {
-      const newDescription = formData.get("description")?.toString()
+      const newDescription = formData.get("description")?.toString();
       const cardDTO: CardDTO = {
         description: newDescription,
       };
@@ -38,7 +39,7 @@ function UpdateCardDescriptionForm({ card }: componentProps) {
       }
 
       toast.success("Card has been updated.");
-      setDescription(newDescription!)
+      setDescription(newDescription!);
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");
@@ -46,34 +47,78 @@ function UpdateCardDescriptionForm({ card }: componentProps) {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger className="grid items-center w-full break-words hover:bg-gray-200">
-        {description && description.length !== 0 ? (
-          <div className="w-[450px] break-words">{description}</div>
-        ) : (
-          <em className="w-full text-center ">
-            This Card doesn't have any description.
-          </em>
-        )}{" "}
-      </PopoverTrigger>
-      <PopoverContent side="left">
-        <form
-          action={udpateCardDescriptionAction}
-          className="grid w-full gap-2"
-        >
-          <Label htmlFor="description-input">Update Card's Description</Label>
-          <Textarea
-            id="description-input"
-            name="description"
-            defaultValue={description}
-            placeholder="Lore ipsum..."
-          />
-          <Button type="submit">
-            <Pen /> Update
+    <>
+      <Popover>
+        <PopoverTrigger className="hidden lg:block">
+          <Button
+            variant={"outline"}
+            className="grid items-center w-56 break-words sm:w-full h-fit place-self-center"
+          >
+            {description && description.length !== 0 ? (
+              <p className="w-full text-center text-black break-all whitespace-pre-wrap">
+                {description}
+              </p>
+            ) : (
+              <em className="w-full text-center ">
+                This Card doesn't have any description.
+              </em>
+            )}
           </Button>
-        </form>
-      </PopoverContent>
-    </Popover>
+        </PopoverTrigger>
+        <PopoverContent side="left">
+          <form
+            action={udpateCardDescriptionAction}
+            className="grid w-full gap-2"
+          >
+            <Label htmlFor="description-input">Update Card's Description</Label>
+            <Textarea
+              id="description-input"
+              name="description"
+              defaultValue={description}
+              placeholder="Lore ipsum..."
+            />
+            <Button type="submit">
+              <Pen /> Update
+            </Button>
+          </form>
+        </PopoverContent>
+      </Popover>
+      <Dialog>
+        <DialogTrigger className="block lg:hidden">
+          <Button
+            variant={"outline"}
+            className="grid items-center w-56 break-words sm:w-full h-fit place-self-center"
+          >
+            {description && description.length !== 0 ? (
+              <p className="w-full text-center text-black break-all whitespace-pre-wrap">
+                {description}
+              </p>
+            ) : (
+              <em className="w-full text-center ">
+                This Card doesn't have any description.
+              </em>
+            )}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="grid items-center w-fit">
+          <form
+            action={udpateCardDescriptionAction}
+            className="grid gap-2 w-fit"
+          >
+            <Label htmlFor="description-input">Update Card's Description</Label>
+            <Textarea
+              id="description-input"
+              name="description"
+              defaultValue={description}
+              placeholder="Lore ipsum..."
+            />
+            <Button type="submit">
+              <Pen /> Update
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

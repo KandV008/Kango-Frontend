@@ -13,6 +13,7 @@ import Tag from "@/components/entities/Tag";
 import { Description } from "@radix-ui/react-dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface componentProps {
   card: CardEntity;
@@ -46,11 +47,11 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
     const added = await addTagsToCard(selectedTags, tagsInside, card);
     const removed = await removeTagsFromCard(tagsInside, selectedTags, card);
 
-    const currentTagsWithNewTags = [...currentTags, ...added]
-    const updatedCurrentTags = currentTagsWithNewTags.filter((tag) => 
-      !removed.some((t) => t.id === tag.id)
-    )
- 
+    const currentTagsWithNewTags = [...currentTags, ...added];
+    const updatedCurrentTags = currentTagsWithNewTags.filter(
+      (tag) => !removed.some((t) => t.id === tag.id)
+    );
+
     setCurrentTags(updatedCurrentTags);
   };
 
@@ -119,70 +120,146 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger className="flex flex-row flex-wrap items-center justify-center w-full h-full gap-1 p-1 break-words hover:bg-gray-200">
-        {currentTags.length > 0 ? (
-          currentTags.map((tag) => {
-            const tagColor = getDataColor(tag.color ?? "BLACK");
-            const textColor =
-              tag.color === "BLACK" ? "text-white" : "text-black";
-            return (
-              <Badge
-                key={tag.id}
-                className={`px-2 border border-black ${textColor}`}
-                style={{ backgroundColor: "#" + tagColor.hex }}
-              >
-                {tag.label}
-              </Badge>
-            );
-          })
-        ) : (
-          <em className="w-full text-center">
-            This Card doesn't have any tag.
-          </em>
-        )}
-      </PopoverTrigger>
-      <PopoverContent side="right">
-        <form
-          action={updateCardTagListAction}
-          className="grid w-full h-full gap-2"
-        >
-          <Label>Update Card's Tag List</Label>
-          <Description>Select or unselect some tags.</Description>
-          <ScrollArea>
-            <section className="flex flex-col justify-center gap-2">
-              {allTags.length > 0 ? (
-                allTags.map((tag, index) => (
-                  <article
-                    key={"input-tag-" + tag.id}
-                    className="flex flex-row gap-1"
+    <>
+      <Popover>
+        <PopoverTrigger className="hidden lg:block">
+          <Button
+            variant={"outline"}
+            className="flex flex-row flex-wrap items-center justify-center w-56 gap-1 p-1 place-self-center sm:w-full h-fit"
+          >
+            {currentTags.length > 0 ? (
+              currentTags.map((tag) => {
+                const tagColor = getDataColor(tag.color ?? "BLACK");
+                const textColor =
+                  tag.color === "BLACK" ? "text-white" : "text-black";
+                return (
+                  <Badge
+                    key={tag.id}
+                    className={`px-2 border border-black ${textColor}`}
+                    style={{ backgroundColor: "#" + tagColor.hex }}
                   >
-                    <Input
-                      type="checkbox"
-                      name={tagListName + index}
-                      value={tag.id}
-                      className="self-center size-5"
-                      defaultChecked={currentTags.some(
-                        (t) => t.id === tag.id
-                      )}
-                    />
-                    <Tag tag={tag} />
-                  </article>
-                ))
-              ) : (
-                <em className="w-full p-2 text-center">
-                  Currently, there is no tag available.
-                </em>
-              )}
-            </section>
-          </ScrollArea>
-          <Button type="submit">
-            <Pen className="mr-2 size-4" />
-            Update
+                    {tag.label}
+                  </Badge>
+                );
+              })
+            ) : (
+              <em className="w-full text-center">
+                This Card doesn't have any tag.
+              </em>
+            )}
           </Button>
-        </form>
-      </PopoverContent>
-    </Popover>
+        </PopoverTrigger>
+        <PopoverContent side="right">
+          <form
+            action={updateCardTagListAction}
+            className="grid w-full h-full gap-2"
+          >
+            <Label>Update Card's Tag List</Label>
+            <Description>Select or unselect some tags.</Description>
+            <ScrollArea>
+              <section className="flex flex-col justify-center gap-2">
+                {allTags.length > 0 ? (
+                  allTags.map((tag, index) => (
+                    <article
+                      key={"input-tag-" + tag.id}
+                      className="flex flex-row gap-1"
+                    >
+                      <Input
+                        type="checkbox"
+                        name={tagListName + index}
+                        value={tag.id}
+                        className="self-center size-5"
+                        defaultChecked={currentTags.some(
+                          (t) => t.id === tag.id
+                        )}
+                      />
+                      <Tag tag={tag} />
+                    </article>
+                  ))
+                ) : (
+                  <em className="w-full p-2 text-center">
+                    Currently, there is no tag available.
+                  </em>
+                )}
+              </section>
+            </ScrollArea>
+            <Button type="submit">
+              <Pen className="mr-2 size-4" />
+              Update
+            </Button>
+          </form>
+        </PopoverContent>
+      </Popover>
+      <Dialog>
+        <DialogTrigger className="block lg:hidden">
+          <Button
+            variant={"outline"}
+            className="flex flex-row flex-wrap items-center justify-center w-56 gap-1 p-1 place-self-center sm:w-full h-fit"
+          >
+            {currentTags.length > 0 ? (
+              currentTags.map((tag) => {
+                const tagColor = getDataColor(tag.color ?? "BLACK");
+                const textColor =
+                  tag.color === "BLACK" ? "text-white" : "text-black";
+                return (
+                  <Badge
+                    key={tag.id}
+                    className={`px-2 border border-black ${textColor}`}
+                    style={{ backgroundColor: "#" + tagColor.hex }}
+                  >
+                    {tag.label}
+                  </Badge>
+                );
+              })
+            ) : (
+              <em className="w-full text-center">
+                This Card doesn't have any tag.
+              </em>
+            )}
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <form
+            action={updateCardTagListAction}
+            className="grid w-full h-full gap-2"
+          >
+            <Label>Update Card's Tag List</Label>
+            <Description>Select or unselect some tags.</Description>
+            <ScrollArea>
+              <section className="flex flex-col justify-center gap-2">
+                {allTags.length > 0 ? (
+                  allTags.map((tag, index) => (
+                    <article
+                      key={"input-tag-" + tag.id}
+                      className="flex flex-row gap-1"
+                    >
+                      <Input
+                        type="checkbox"
+                        name={tagListName + index}
+                        value={tag.id}
+                        className="self-center size-5"
+                        defaultChecked={currentTags.some(
+                          (t) => t.id === tag.id
+                        )}
+                      />
+                      <Tag tag={tag} />
+                    </article>
+                  ))
+                ) : (
+                  <em className="w-full p-2 text-center">
+                    Currently, there is no tag available.
+                  </em>
+                )}
+              </section>
+            </ScrollArea>
+            <Button type="submit">
+              <Pen className="mr-2 size-4" />
+              Update
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

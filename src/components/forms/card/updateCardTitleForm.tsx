@@ -7,6 +7,7 @@ import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
 import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface componentProps {
   card: CardEntity;
@@ -46,25 +47,56 @@ function UpdateCardTitleForm({ card }: componentProps) {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger className="w-full">
-        <h1 className="w-full hover:bg-gray-200">{title}</h1>
-      </PopoverTrigger>
-      <PopoverContent side="top">
-        <form action={udpateCardTitleAction} className="grid w-full gap-2">
-          <Label htmlFor="title-input">Update Card's Title</Label>
-          <Input
-            id="title-input"
-            name="title"
-            defaultValue={title}
-            placeholder="Card X"
-          />
-          <Button type="submit">
-            <Pen /> Update
+    <>
+      <Popover>
+        <PopoverTrigger className="hidden sm:block">
+          <Button
+            variant={"outline"}
+            className="w-full font-bold break-all sm:text-lg xl:text-xl h-fit text-start"
+          >
+            {title}
           </Button>
-        </form>
-      </PopoverContent>
-    </Popover>
+        </PopoverTrigger>
+        <PopoverContent side="top">
+          <form action={udpateCardTitleAction} className="grid w-full gap-2">
+            <Label htmlFor="title-input">Update Card's Title</Label>
+            <Input
+              id="title-input"
+              name="title"
+              defaultValue={title}
+              placeholder="Card X"
+            />
+            <Button type="submit">
+              <Pen /> Update
+            </Button>
+          </form>
+        </PopoverContent>
+      </Popover>
+      <Dialog>
+        <DialogTrigger className="block sm:hidden">
+          <Button
+            variant={"outline"}
+            className="w-full font-bold break-all sm:text-lg xl:text-xl h-fit text-start"
+          >
+            {title}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="grid items-center w-fit">
+          <form action={udpateCardTitleAction} className="grid gap-2 w-fit">
+            <Label htmlFor="title-input">Update Card's Title</Label>
+            <Input
+              id="title-input"
+              name="title"
+              defaultValue={title}
+              placeholder="Card X"
+            />
+            <Button type="submit">
+              <Pen /> Update
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

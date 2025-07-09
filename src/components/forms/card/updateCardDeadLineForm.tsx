@@ -8,6 +8,7 @@ import type { CardDTO } from "@/model/card/cardDTO";
 import { InputCalendar } from "@/components/inputs/InputCalendar";
 import { useState } from "react";
 import { getFormattedDate } from "@/lib/utils";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface componentProps {
   card: CardEntity;
@@ -15,7 +16,6 @@ interface componentProps {
 
 function UpdateCardDeadLineForm({ card }: componentProps) {
   const [deadLine, setDeadLine] = useState<Date | null>(card.deadLine);
-
 
   const udpateCardTitleAction = async (formData: FormData) => {
     try {
@@ -25,10 +25,6 @@ function UpdateCardDeadLineForm({ card }: componentProps) {
       const cardDTO: CardDTO = {
         deadLine: parsedDate,
       };
-
-      console.log("RAW DATE", rawDate);
-      console.log("PARSE DATE", parsedDate);
-      console.log("DTO", cardDTO);
 
       const response = await fetch(
         `http://localhost:8080/api/cards/${card.id}/deadline`,
@@ -46,7 +42,7 @@ function UpdateCardDeadLineForm({ card }: componentProps) {
       }
 
       toast.success("Card has been updated.");
-      setDeadLine(parsedDate)
+      setDeadLine(parsedDate);
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");
@@ -54,28 +50,62 @@ function UpdateCardDeadLineForm({ card }: componentProps) {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger className="w-full">
-        <h2 className="grid items-center hover:bg-gray-200">
-          {deadLine ? (
-            <>{getFormattedDate(deadLine)}</>
-          ) : (
-            <em className="justify-center w-full text-center self">
-              This Card doesn't have a deadline.
-            </em>
-          )}
-        </h2>{" "}
-      </PopoverTrigger>
-      <PopoverContent side="right">
-        <form action={udpateCardTitleAction} className="grid w-full gap-2">
-          <Label htmlFor="title-input">Update Card's DeadLine</Label>
-          <InputCalendar currentDate={card.deadLine} />
-          <Button type="submit">
-            <Pen /> Update
-          </Button>
-        </form>
-      </PopoverContent>
-    </Popover>
+    <>
+      <Popover>
+        <PopoverTrigger className="hidden w-full sm:block">
+          <Button
+            variant={"outline"}
+            className="grid items-center w-24 h-12 sm:h-16 sm:w-40 hover:bg-gray-200"
+          >
+            {deadLine ? (
+              <div className="text-base font-bold sm:text-xl">
+                {getFormattedDate(deadLine)}
+              </div>
+            ) : (
+              <em className="flex flex-col text-center break-words w-fit">
+                <p>This Card doesn't</p> <p>have a deadline.</p>
+              </em>
+            )}
+          </Button>{" "}
+        </PopoverTrigger>
+        <PopoverContent side="right">
+          <form action={udpateCardTitleAction} className="grid w-full gap-2">
+            <Label htmlFor="title-input">Update Card's DeadLine</Label>
+            <InputCalendar currentDate={card.deadLine} />
+            <Button type="submit">
+              <Pen /> Update
+            </Button>
+          </form>
+        </PopoverContent>
+      </Popover>
+      <Dialog>
+        <DialogTrigger className="block sm:hidden">
+          <Button
+            variant={"outline"}
+            className="grid items-center w-24 h-12 sm:h-16 sm:w-40 hover:bg-gray-200"
+          >
+            {deadLine ? (
+              <div className="text-base font-bold sm:text-xl">
+                {getFormattedDate(deadLine)}
+              </div>
+            ) : (
+              <em className="flex flex-col text-center break-words w-fit">
+                <p>This Card doesn't</p> <p>have a deadline.</p>
+              </em>
+            )}
+          </Button>{" "}
+        </DialogTrigger>
+        <DialogContent className="grid items-center w-fit">
+          <form action={udpateCardTitleAction} className="grid justify-between gap-2 mx-auto">
+            <Label htmlFor="title-input">Update Card's DeadLine</Label>
+            <InputCalendar currentDate={card.deadLine} />
+            <Button type="submit">
+              <Pen /> Update
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
