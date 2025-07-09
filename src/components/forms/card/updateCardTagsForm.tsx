@@ -156,7 +156,6 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
           >
             <Label>Update Card's Tag List</Label>
             <Description>Select or unselect some tags.</Description>
-            <ScrollArea>
               <section className="flex flex-col justify-center gap-2">
                 {allTags.length > 0 ? (
                   allTags.map((tag, index) => (
@@ -182,7 +181,6 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
                   </em>
                 )}
               </section>
-            </ScrollArea>
             <Button type="submit">
               <Pen className="mr-2 size-4" />
               Update

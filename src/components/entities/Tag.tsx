@@ -65,11 +65,11 @@ function Tag({ tag }: componentProps) {
   };
 
   return (
-    <article className="flex flex-row items-start justify-between w-full gap-2 p-4 m-auto border-2 border-black rounded-2xl">
+    <article className="flex flex-row items-start justify-between w-full gap-1 p-2 border-2 border-black sm:gap-2 sm:m-auto sm:p-3 md:p-4 rounded-2xl">
       {/* Info */}
-      <section className="flex flex-row items-center gap-2 size-full">
+      <section className="flex flex-row items-center gap-2 text-sm sm:text-base *:sm:font-semibold xl:font-bold size-full">
         <div
-          className="size-10 rounded-xl"
+          className="size-5 sm:size-10 rounded-xl"
           style={{ backgroundColor: "#" + tagColor.hex }}
         />
         <h1>{label ? label : <em>Empty label</em>}</h1>

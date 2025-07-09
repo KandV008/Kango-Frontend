@@ -24,16 +24,16 @@ function TagList({ dashboardId }: componentProps) {
   }, [dashboardId]);
 
   return (
-    <section className="flex flex-col flex-wrap items-center justify-center gap-5 px-5 size-full ">
+    <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden h-96">
       {allTags && allTags.length !== 0 ? (
-        <>
+        <div className="grid w-full gap-1 overflow-y-scroll sm:gap-2 h-max">
           {globalTagList.map((tag) => (
             <Tag tag={tag} key={"global-tag-" + tag.id} />
           ))}
           {localTagList.map((tag) => (
             <Tag tag={tag} key={"local-tag-" + tag.id} />
           ))}
-        </>
+        </div>
       ) : (
         <em className="w-full text-center ">Currently, there is no tag available.</em>
       )}
