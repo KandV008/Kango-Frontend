@@ -29,8 +29,8 @@ import { useEffect, useState } from "react";
 import { DashboardEntity } from "@/model/dashboard/dashboard";
 import UpdateDashboardNameForm from "../forms/dashboard/updateDashboardNameForm";
 
-interface componentProps{
-  toggleSideBar: () => void
+interface componentProps {
+  toggleSideBar: () => void;
 }
 
 function Header({ toggleSideBar }: componentProps) {
@@ -66,39 +66,54 @@ function Header({ toggleSideBar }: componentProps) {
     if (id) fetchDashboard();
   }, [id]);
 
+  const logoLabel = isDashboardPage ? "hidden lg:block" : "";
+
   return (
-    <section className="flex flex-row items-center justify-between h-12 px-5 border-b-2 border-gray-200 grow-0 ">
+    <section className="flex flex-row items-center justify-between h-12 gap-2 px-5 border-b-2 border-gray-200 grow-0 ">
       {/* Toggle Side Bar */}
-      <Button variant={"outline"}
+      <Button
+        variant={"outline"}
         className="md:hidden top-4 left-4"
         onClick={toggleSideBar}
       >
         <Menu />
       </Button>
       {/* App Name */}
-      <Label>Kango</Label>
+      <Label className={logoLabel}>Kango</Label>
       {/* Dashboard Name */}
-      {!isLoading && dashboard ? (
-        <article className="flex justify-between gap-5">
-          <Label className="w-full text-center">{dashboardName}</Label>
-          <UpdateDashboardNameForm
+      {!isLoading && dashboard && (
+        <article className="flex flex-row items-center justify-center w-full gap-2">
+          <Label className="text-center w-fit">{dashboardName}</Label>
+          <div className="hidden sm:block">
+            <UpdateDashboardNameForm
             dashboard={dashboard}
             updatedAction={(newValue: string) => {
               setDashboardName(newValue);
             }}
           />
+          </div>
         </article>
-      ) : (
-        <></>
       )}
       {/* Actions */}
-      <article className="flex flex-row gap-2">
+      <article className="flex flex-row gap-1 sm:gap-2">
+        {!isLoading && dashboard && (
+          <div className="block sm:hidden">
+            <UpdateDashboardNameForm
+              dashboard={dashboard}
+              updatedAction={(newValue: string) => {
+                setDashboardName(newValue);
+              }}
+            />
+          </div>
+        )}
         {/* Handle Attached Files */}
         {isDashboardPage ? (
           <Popover>
             <PopoverTrigger>
               <Button>
-                <File /> Attached Files
+                <File />
+                <span className="hidden lg:block">Attached</span>{" "}
+                <span className="hidden sm:block">Files</span>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="grid gap-2 p-5 mt-5 mr-5 w-fit bg-neutral-100 rounded-2xl">

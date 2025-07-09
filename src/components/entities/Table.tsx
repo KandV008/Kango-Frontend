@@ -1,6 +1,14 @@
 import type { TableEntity } from "@/model/table/table";
 import { Button } from "../ui/button";
-import { Menu, Pen, Plus, Trash } from "lucide-react";
+import {
+  ArrowUpDown,
+  Copy,
+  Menu,
+  Move,
+  Pen,
+  Plus,
+  Trash,
+} from "lucide-react";
 import { Label } from "../ui/label";
 import Card from "./Card";
 import { Popover, PopoverContent } from "../ui/popover";
@@ -163,7 +171,7 @@ function Table({ table, tables }: componentProps) {
             cardPosition - destinyTableZone < 0
               ? destinyTableZone - 1
               : destinyTableZone;
-              
+
           await updateCardPosition(destinyTableId, cardId, newPosition);
         } else {
           await moveCardFormTableToAnotherTable(
@@ -184,7 +192,6 @@ function Table({ table, tables }: componentProps) {
   const ref = useRef(null);
   const [dragging, setDragging] = useState<boolean>(false);
 
-  //console.log("CARD", card)
   const position = table.position;
   const dashboardId = table.dashboard;
   const tableId = table.id;
@@ -207,7 +214,7 @@ function Table({ table, tables }: componentProps) {
   }, [tableId, position, dashboardId]);
 
   const baseCardStyle =
-    "flex flex-col items-start gap-2 px-2 py-1 border-2 rounded-b-md w-80 rounded-t-2xl";
+    "flex flex-col items-start gap-2 px-2 py-1 border-2 rounded-b-md w-72 sm:w-80 rounded-t-2xl";
   const dragCardStyle = dragging
     ? "border-gray-700 bg-gray-200 text-gray-600"
     : "border-black text-black";
@@ -215,11 +222,11 @@ function Table({ table, tables }: componentProps) {
   return (
     <article
       ref={ref}
-      className={`${baseCardStyle} ${dragCardStyle} grow `}
+      className={`${baseCardStyle} ${dragCardStyle} grow shadow-xl`}
     >
       {/* Header */}
       <section className="flex flex-row items-center justify-between w-full gap-2 p-2 border-b-2 border-black h-fit">
-        <Label>{tableName}</Label>
+        <Label className="text-xl xl:text-2xl">{tableName}</Label>
         <article className="flex flex-row gap-1">
           {/* Update Table Name */}
           <Popover>
@@ -246,12 +253,14 @@ function Table({ table, tables }: componentProps) {
             </PopoverTrigger>
             {/* Items */}
             <PopoverContent className="grid gap-2 w-fit">
-              <Label>Settings</Label>
+              <Label className="mx-auto w-fit">Settings</Label>
               <Separator />
               {/* Sort Card List */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline">Sort Card List</Button>
+                  <Button variant="outline">
+                    <ArrowUpDown /> Sort Card List
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent side="right" className="w-80">
                   <form action={sortCardListAction}>
@@ -276,7 +285,10 @@ function Table({ table, tables }: componentProps) {
               {/* Move Card List */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline">Move Card List</Button>
+                  <Button variant="outline">
+                    <Move />
+                    Move Card List
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent side="right" className="w-80">
                   <form action={handleMoveCardListAction}>
@@ -306,7 +318,10 @@ function Table({ table, tables }: componentProps) {
               {/* Copy Card List */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline">Copy Card List</Button>
+                  <Button variant="outline">
+                    <Copy />
+                    Copy Card List
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent side="right" className="w-80">
                   <form action={handleCopyCardListAction}>
@@ -371,7 +386,7 @@ function Table({ table, tables }: componentProps) {
             <DialogTrigger asChild>
               <Button>
                 <Plus />
-                Add Card
+                <p className="hidden lg:block">Add</p> Card
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -413,10 +428,10 @@ function Table({ table, tables }: componentProps) {
           </Dialog>
         </article>
         {/* All Cards */}
-        <article className="grid w-full gap-2 overflow-y-scroll h-max">
+        <article className="grid w-full gap-1 overflow-y-scroll sm:gap-2 h-max">
           <DropZone zone={0} destination={table.id} type={"CARD"} />
           {cardList.map((card) => (
-            <div className="grid gap-2" key={"card-" + card.id}>
+            <div className="grid gap-1 sm:gap-2" key={"card-" + card.id}>
               <Card card={card} dashboardId={table.id.toString()} />
               <DropZone
                 zone={card.position + 1}

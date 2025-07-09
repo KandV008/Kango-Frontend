@@ -79,7 +79,7 @@ function Card({ card, dashboardId }: componentProps) {
   }, [cardId, position, tableId]);
 
   const baseCardStyle =
-    "flex flex-col items-start justify-between w-68 h-36 gap-2 m-auto border-2 rounded-2xl";
+    "flex flex-col items-start justify-between w-60 sm:w-68 h-32 sm:h-36 gap-2 m-auto border-2 rounded-2xl";
   const dragCardStyle = dragging
     ? "border-gray-700 bg-gray-200 text-gray-600"
     : "border-black text-black";
@@ -88,7 +88,7 @@ function Card({ card, dashboardId }: componentProps) {
     <article className={`${baseCardStyle} ${dragCardStyle}`} ref={ref}>
       {/* Top */}
       <section
-        className="flex flex-row justify-between w-full p-2 h-fit rounded-t-xl"
+        className="flex flex-row justify-between w-full p-1 sm:p-2 h-fit rounded-t-xl"
         style={{ backgroundColor: "#" + cardColor.hex }}
       >
         {/* Tags */}
@@ -100,7 +100,7 @@ function Card({ card, dashboardId }: componentProps) {
             return (
               <Badge
                 key={tag.id}
-                className={`px-2 border border-black h-fit ${textColor}`}
+                className={`px-1 sm:px-2 border border-black h-fit ${textColor}`}
                 style={{ backgroundColor: "#" + tagColor.hex }}
               >
                 {tag.label}
@@ -140,14 +140,14 @@ function Card({ card, dashboardId }: componentProps) {
         </article>
       </section>
       {/* Medium */}
-      <section className="flex flex-row items-center w-full h-8 gap-2 mx-2">
-        <h1 className="font-semibold">{card.title}</h1>
+      <section className="flex flex-row items-center w-full h-4 gap-2 mx-2 sm:h-8">
+        <h1 className="text-sm font-semibold sm:text-base">{card.title}</h1>
       </section>
       <Separator className="" />
       {/* Bottom */}
-      <section className="flex flex-row items-center justify-between w-full h-12 px-3 pb-3">
+      <section className="flex flex-row items-center justify-between w-full h-12 px-2 pb-1 sm:pb-3 sm:px-3">
         {/* Icons */}
-        <article className="flex flex-row justify-start gap-2 w-fit">
+        <article className="flex flex-row justify-start gap-1 sm:gap-2 w-fit">
           {/* Description Icon */}
           {card.description ? (
             <Text />
@@ -170,7 +170,7 @@ function Card({ card, dashboardId }: componentProps) {
         {/** Deadline */}
         <article className="text-end">
           {card.deadLine ? (
-            <div className="font-semibold">
+            <div className="text-sm font-semibold sm:text-base">
               {getFormattedDate(card.deadLine)}
             </div>
           ) : (
