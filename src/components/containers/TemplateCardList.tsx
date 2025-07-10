@@ -18,10 +18,11 @@ function TemplateCardList({ dashboardId }: componentProps) {
         if (!response.ok) {
           throw new Error("Error en la petición: " + response.status);
         }
+
         return response.json();
       })
       .then((data) => {
-        console.log("Plantillas recibidass:", data);
+        console.log("Plantillas recibidas:", data);
         const mappedCards = data.map(CardEntity.fromJSON);
         setGlobalCardList(mappedCards);
       })
@@ -54,16 +55,16 @@ function TemplateCardList({ dashboardId }: componentProps) {
   }, [dashboardId]);
 
   return (
-    <section className="flex flex-col flex-wrap items-center justify-center gap-5 px-5 size-full ">
+    <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden h-96">
       {allTemplates && allTemplates.length !== 0 ? (
-        <>
+        <article className="grid w-full gap-1 overflow-y-scroll sm:gap-2 h-max">
           {globalCardList.map((card) => (
             <Card card={card} key={"global-template-card-" + card.id} />
           ))}
           {localCardList.map((card) => (
             <Card card={card} key={"local-template-card-" + card.id} />
           ))}
-        </>
+        </article>
       ) : (
         <em className="w-full text-center ">
           Currently, there is no card template available.

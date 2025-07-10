@@ -166,7 +166,7 @@ function Dashboard({ dashboard }: componentProps) {
       <Separator />
       <section className="flex flex-row justify-around w-full">
         {items.map((item, index) => (
-          <article className="flex gap-1 sm:gap-0 sm:items-center sm:flex-col lg:gap-1 lg:flex-row">
+          <article key={"stadistics-" + index} className="flex gap-1 sm:gap-0 sm:items-center sm:flex-col lg:gap-1 lg:flex-row">
             <item.icon className="" />
             <span className="flex flex-row gap-1 sm:text-base xl:text-lg">
               {stadistics[index].count}{" "}

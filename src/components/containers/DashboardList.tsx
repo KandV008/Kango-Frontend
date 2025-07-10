@@ -29,7 +29,7 @@ function DashboardList() {
     <ScrollArea className="grid items-center h-full ">
       <section className="flex flex-col items-center self-center justify-center gap-5 px-5 ">
         {dashboardList.map((dashboard) => (
-          <Dashboard dashboard={dashboard} />
+          <Dashboard dashboard={dashboard} key={"dashboard-" + dashboard.id}/>
         ))}
       </section>
       <ScrollBar orientation="vertical" />
