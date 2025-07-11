@@ -1,3 +1,4 @@
+import { DashboardEntity } from "@/model/dashboard/dashboard";
 import type { TableDTO } from "@/model/table/tableDTO";
 import { toast } from "sonner";
 
@@ -41,4 +42,9 @@ export default async function createTable(formData: FormData) {
 
   console.log("Table created successfully");
   toast.success("Table has been created.");
+
+  const dashboardData = await addTableRes.json();
+  const mappedDashboard = DashboardEntity.fromJSON(dashboardData)
+  const newTable = mappedDashboard.tableList.filter(value => value.id === tableId)[0]
+  return newTable;
 }

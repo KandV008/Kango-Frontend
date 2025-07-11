@@ -69,7 +69,7 @@ function Header({ toggleSideBar }: componentProps) {
   const logoLabel = isDashboardPage ? "hidden lg:block" : "";
 
   return (
-    <section className="flex flex-row items-center justify-between h-12 gap-2 px-5 border-b-2 border-gray-200 grow-0 ">
+    <section className="flex flex-row items-center justify-between w-full h-12 gap-2 px-5 border-b-2 border-gray-200 grow-0">
       {/* Toggle Side Bar */}
       <Button
         variant={"outline"}

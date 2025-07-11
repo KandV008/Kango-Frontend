@@ -3,17 +3,24 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Upload } from "lucide-react";
 import createTable from "@/lib/forms/table/createTable";
+import { TableListContext } from "@/components/contexts/tableList";
+import { useContext } from "react";
 
 interface componentProps {
   dashboardId: string;
 }
 
 function TableForm({ dashboardId }: componentProps) {
-  const handleForm = async (formData: FormData) => {
-    createTable(formData);
+  const { setTableList } = useContext(TableListContext);
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    window.location.reload();
+  const handleForm = async (formData: FormData) => {
+    const newTable = await createTable(formData);
+
+    if (!newTable) return;
+    
+    setTableList((prev) => {
+      return [...prev, newTable].sort((a, b) => a.position - b.position);
+    });
   };
 
   return (

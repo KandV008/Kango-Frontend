@@ -1,16 +1,15 @@
-import type { TableEntity } from "@/model/table/table";
 import Table from "../entities/Table";
 import { DropZone } from "../inputs/DropZone";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import updateTablePositionFromDashboard from "@/lib/forms/dashboard/updateTablePositionFromDashboard";
+import { TableListContext } from "../contexts/tableList";
 
-interface componentProps {
-  tables: TableEntity[];
-}
+function TableList() {
 
-function TableList({ tables }: componentProps) {
-  const tableList = [...tables].sort((a, b) => a.position - b.position);
+  const { tableList } = useContext(TableListContext);
+
+  const sortedTableList = [...tableList].sort((a, b) => a.position - b.position);
 
   useEffect(() => {
     return monitorForElements({
@@ -51,12 +50,12 @@ function TableList({ tables }: componentProps) {
 
   return (
     <div className="flex flex-row h-full gap-2 p-5 ">
-      {tableList.length !== 0 && (
+      {sortedTableList.length !== 0 && (
         <>
-          <DropZone zone={0} destination={tables[0].dashboard} type="TABLE" />
+          <DropZone zone={0} destination={tableList[0].dashboard} type="TABLE" />
           {tableList.map((table) => (
             <div className="flex flex-row h-full gap-2" key={table.id}>
-              <Table table={table} tables={tables} />
+              <Table table={table} tables={tableList} />
               <DropZone
                 zone={table.position + 1}
                 destination={table.dashboard}

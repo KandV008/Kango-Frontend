@@ -52,9 +52,10 @@ const items = [
 
 interface componentProps {
   dashboard: DashboardEntity;
+  onDelete: () => void;
 }
 
-function Dashboard({ dashboard }: componentProps) {
+function Dashboard({ dashboard, onDelete }: componentProps) {
   const [dashboardName, setDashboardName] = useState<string>(dashboard.name);
 
   const calculateNumCards = (tables: TableEntity[]) => {
@@ -90,7 +91,7 @@ function Dashboard({ dashboard }: componentProps) {
     navigate(`/${dashboard.id}`);
   };
 
-  const deleteDashboardACtion = async () => {
+  const deleteDashboardAction = async () => {
     try {
       const response = await fetch(
         `http://localhost:8080/api/dashboards/${dashboard.id}`,
@@ -106,8 +107,7 @@ function Dashboard({ dashboard }: componentProps) {
       }
 
       toast.success("Dashboard has been deleted.");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      window.location.reload();
+      onDelete();      
     } catch (error) {
       console.error("Error deleting dashboard:", error);
       toast.error("Error deleting dashboard. Please try again.");
@@ -154,7 +154,7 @@ function Dashboard({ dashboard }: componentProps) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={deleteDashboardACtion}>
+                <AlertDialogAction onClick={deleteDashboardAction}>
                   Continue
                 </AlertDialogAction>
               </AlertDialogFooter>

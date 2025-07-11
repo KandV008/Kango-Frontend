@@ -1,12 +1,14 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CardEntity } from "@/model/card/card";
 import { DashboardEntity } from "@/model/dashboard/dashboard";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Copy } from "lucide-react";
 import Card from "../entities/Card";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { toast } from "sonner";
+import { CardListContext } from "../contexts/cardList";
+import { Input } from "../ui/input";
+import copyCardTemplate from "@/lib/forms/card/copyCardTemplate";
 
 interface componentProps {
   dashboardId: string | undefined;
@@ -17,6 +19,7 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
   const [globalCardList, setGlobalCardList] = useState<CardEntity[]>([]);
   const [localCardList, setLocalCardList] = useState<CardEntity[]>([]);
   const allTemplates = [...globalCardList, ...localCardList];
+  const { setCardList } = useContext(CardListContext)
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/global-template-cards`)
@@ -60,59 +63,11 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
   }, [dashboardId]);
 
   const createCardUsingATemplateAction = async (formData: FormData) => {
-    const templateCardId = formData.get("card_id")?.toString();
+    const newCard = await copyCardTemplate(formData)
 
-    const createCardRes = await fetch(
-      `http://localhost:8080/api/cards/${templateCardId}/copy`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    if(!newCard) return
 
-    if (!createCardRes.ok) {
-      console.error(
-        "Error creating card using a template:",
-        await createCardRes.text()
-      );
-      toast.error(
-        `Error creating card using a template: ${await createCardRes.text()}`
-      );
-    }
-
-    const createdCard = await createCardRes.json();
-    const cardId = createdCard.id;
-
-    const addCardRes = await fetch(
-      `http://localhost:8080/api/tables/${tableId}/cards`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(cardId),
-      }
-    );
-
-    if (!addCardRes.ok) {
-      console.error(
-        "Error adding card:",
-        await addCardRes.text(),
-        " to table:",
-        tableId
-      );
-      toast.error(`Error adding card: ${await addCardRes.text()}`);
-      throw Error(
-        `Error adding card: ${await addCardRes.text()} to table: ${tableId}`
-      );
-    }
-
-    console.log("Card created successfully");
-    toast.success("Card has been created.");
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    window.location.reload();
+    setCardList(prev => [...prev, newCard])
   };
 
   return (
@@ -120,6 +75,7 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
       className="flex flex-col gap-3"
       action={createCardUsingATemplateAction}
     >
+      <Input type="hidden" name="table_id" value={tableId} />
       <ScrollArea className="grid justify-center p-3 border rounded-md w-96 whitespace-nowrap">
         {allTemplates && allTemplates.length !== 0 ? (
           <RadioGroup

@@ -3,13 +3,19 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Upload } from "lucide-react";
 import createDashboard from "@/lib/forms/dashboard/createDashboard";
+import { useContext } from "react";
+import { DashboardListContext } from "@/components/contexts/dashboardList";
 
 function DashboardForm() {
-  const handleForm = async (formData: FormData) => {
-    await createDashboard(formData);
+  const { setDashboardList } = useContext(DashboardListContext);
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    window.location.reload();
+  const handleForm = async (formData: FormData) => {
+    const newDashboard = await createDashboard(formData);
+    if (!newDashboard) return;
+    
+    setDashboardList((prev) => {
+      return [...prev, newDashboard].sort((a, b) => a.id - b.id);
+    });
   };
 
   return (
@@ -20,7 +26,14 @@ function DashboardForm() {
           Set the attributes of the new dashboard.
         </p>
       </div>
-      <form className="grid gap-5" action={handleForm}>
+      <form
+        className="grid gap-5"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          handleForm(formData);
+        }}
+      >
         <div className="grid items-center grid-cols-3 gap-4">
           <Label htmlFor="width">Name</Label>
           <Input

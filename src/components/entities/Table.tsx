@@ -1,14 +1,6 @@
 import type { TableEntity } from "@/model/table/table";
 import { Button } from "../ui/button";
-import {
-  ArrowUpDown,
-  Copy,
-  Menu,
-  Move,
-  Pen,
-  Plus,
-  Trash,
-} from "lucide-react";
+import { ArrowUpDown, Copy, Menu, Move, Pen, Plus, Trash } from "lucide-react";
 import { Label } from "../ui/label";
 import Card from "./Card";
 import { Popover, PopoverContent } from "../ui/popover";
@@ -41,7 +33,7 @@ import createCard from "@/lib/forms/card/createCard";
 import { Input } from "../ui/input";
 import { InputSort } from "../inputs/InputSort";
 import { DropZone } from "../inputs/DropZone";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import updateCardPosition from "@/lib/forms/table/updateCardPositionFromTable";
 import moveCardFormTableToAnotherTable from "@/lib/forms/table/moveCardFromTableToAnotherTable";
@@ -52,6 +44,9 @@ import { InputCardTemplate } from "../inputs/InputCardTemplate";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import UpdateTableNameForm from "../forms/table/updateTableNameForm";
+import { TableListContext } from "../contexts/tableList";
+import { CardListContext } from "../contexts/cardList";
+import { CardEntity } from "@/model/card/card";
 
 interface componentProps {
   table: TableEntity;
@@ -59,9 +54,12 @@ interface componentProps {
 }
 
 function Table({ table, tables }: componentProps) {
-  const cardList = [...table.cardList].sort((a, b) => a.position - b.position);
+  const [cardList, setCardList] = useState<CardEntity[]>(table.cardList);
+
+  const sortedCardList = [...cardList].sort((a, b) => a.position - b.position);
   const otherTables = [...tables].filter((a) => a.id !== table.id);
   const [tableName, setTableName] = useState<string>(table.name);
+  const { setTableList } = useContext(TableListContext);
 
   const deleteTableAction = async () => {
     try {
@@ -77,8 +75,9 @@ function Table({ table, tables }: componentProps) {
       }
 
       toast.success("Table has been deleted.");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      window.location.reload();
+
+      const newTables = tables.filter((t) => t.id !== table.id);
+      setTableList(newTables);
     } catch (error) {
       console.error("Error deleting table:", error);
       toast.error("Error deleting table. Please try again.");
@@ -130,9 +129,10 @@ function Table({ table, tables }: componentProps) {
   };
 
   const handleCardCreationAction = async (formData: FormData) => {
-    await createCard(formData);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    window.location.reload();
+    const newCard = await createCard(formData);
+    if (!newCard) return;
+
+    setCardList((prev) => [...prev, newCard]);
   };
 
   /* Monitoring Drag & Drop Logic */
@@ -379,69 +379,73 @@ function Table({ table, tables }: componentProps) {
         </article>
       </section>
       {/* CardList */}
-      <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden">
-        {/* Action Add Card */}
-        <article className="grid justify-end w-full">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus />
-                <p className="hidden lg:block">Add</p> Card
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <form action={handleCardCreationAction} className="grid gap-5">
-                {/* Header */}
-                <Input type="hidden" name="table_id" value={table.id} />
-                <DialogHeader>
-                  <DialogTitle>Create Card</DialogTitle>
-                  <DialogDescription>
-                    Set the attributes of the new Card
-                  </DialogDescription>
-                </DialogHeader>
-                {/* Form */}
-                <CardForm />
-                {/* Footer */}
-                <DialogFooter>
-                  {/* Use a Template */}
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button>Use a template</Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="grid gap-2 w-fit">
-                      <Label>Select a template to use:</Label>
-                      <InputCardTemplate
-                        dashboardId={table.dashboard.toString()}
-                        tableId={table.id.toString()}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  {/* Cancel Action */}
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                  </DialogClose>
-                  {/* Create Card */}
-                  <Button type="submit">Create Card</Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>{" "}
-          </Dialog>
-        </article>
-        {/* All Cards */}
-        <article className="grid w-full gap-1 overflow-y-scroll sm:gap-2 h-max">
-          <DropZone zone={0} destination={table.id} type={"CARD"} />
-          {cardList.map((card) => (
-            <div className="grid gap-1 sm:gap-2" key={"card-" + card.id}>
-              <Card card={card} dashboardId={table.id.toString()} />
-              <DropZone
-                zone={card.position + 1}
-                destination={table.id}
-                type={"CARD"}
-              />
-            </div>
-          ))}
-        </article>
-      </section>
+      <CardListContext.Provider
+        value={{ cardList: sortedCardList, setCardList }}
+      >
+        <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden">
+          {/* Action Add Card */}
+          <article className="grid justify-end w-full">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus />
+                  <p className="hidden lg:block">Add</p> Card
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <form action={handleCardCreationAction} className="grid gap-5">
+                  {/* Header */}
+                  <Input type="hidden" name="table_id" value={table.id} />
+                  <DialogHeader>
+                    <DialogTitle>Create Card</DialogTitle>
+                    <DialogDescription>
+                      Set the attributes of the new Card
+                    </DialogDescription>
+                  </DialogHeader>
+                  {/* Form */}
+                  <CardForm />
+                  {/* Footer */}
+                  <DialogFooter>
+                    {/* Use a Template */}
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button>Use a template</Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="grid gap-2 w-fit">
+                        <Label>Select a template to use:</Label>
+                        <InputCardTemplate
+                          dashboardId={table.dashboard.toString()}
+                          tableId={table.id.toString()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    {/* Cancel Action */}
+                    <DialogClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    {/* Create Card */}
+                    <Button type="submit">Create Card</Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>{" "}
+            </Dialog>
+          </article>
+          {/* All Cards */}
+          <article className="grid w-full gap-1 overflow-y-scroll sm:gap-2 h-max">
+            <DropZone zone={0} destination={table.id} type={"CARD"} />
+            {sortedCardList.map((card) => (
+              <div className="grid gap-1 sm:gap-2" key={"card-" + card.id}>
+                <Card card={card} dashboardId={table.id.toString()} />
+                <DropZone
+                  zone={card.position + 1}
+                  destination={table.id}
+                  type={"CARD"}
+                />
+              </div>
+            ))}
+          </article>
+        </section>
+      </CardListContext.Provider>
     </article>
   );
 }

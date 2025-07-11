@@ -14,13 +14,14 @@ import { toast } from "sonner";
 import { File, SquareCheck, Text, Trash } from "lucide-react";
 import { getDataColor } from "@/model/utils/color";
 import type { CardEntity } from "@/model/card/card";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import AboutCard from "../about/AboutCard";
 import { Separator } from "../ui/separator";
 import { getFormattedDate } from "@/lib/utils";
 import { Badge } from "../ui/badge";
+import { CardListContext } from "../contexts/cardList";
 
 interface componentProps {
   card: CardEntity;
@@ -30,6 +31,7 @@ interface componentProps {
 function Card({ card, dashboardId }: componentProps) {
   const cardColor = getDataColor(card.color ? card.color : "BLACK");
   const visibleTags = card.tagList ? card.tagList.slice(0, 2) : [];
+  const { cardList, setCardList } = useContext(CardListContext);
 
   const deleteDashboardACtion = async () => {
     try {
@@ -45,8 +47,9 @@ function Card({ card, dashboardId }: componentProps) {
       }
 
       toast.success("Card has been deleted.");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      window.location.reload();
+
+      const newCardList = cardList.filter((c) => c.id !== card.id);
+      setCardList(newCardList);
     } catch (error) {
       console.error("Error deleting card:", error);
       toast.error("Error deleting card. Please try again.");

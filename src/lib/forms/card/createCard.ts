@@ -1,4 +1,5 @@
 import type { CardDTO } from "@/model/card/cardDTO";
+import { TableEntity } from "@/model/table/table";
 import { toast } from "sonner";
 
 export default async function createCard(formData: FormData) {
@@ -41,4 +42,8 @@ export default async function createCard(formData: FormData) {
     console.log("Card created successfully");
     toast.success("Card has been created.");
 
+    const tableData = await addCardRes.json();
+    const mappedTable = TableEntity.fromJSON(tableData)
+    const newCard = mappedTable.cardList.filter(value => value.id === cardId)[0]
+    return newCard
 }
