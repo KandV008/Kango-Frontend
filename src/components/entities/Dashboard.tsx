@@ -115,7 +115,7 @@ function Dashboard({ dashboard }: componentProps) {
   };
 
   return (
-    <article className="flex flex-col items-center justify-center w-full gap-2 px-5 py-4 mx-auto border-2 border-black shadow-md rounded-b-md rounded-tr-md rounded-tl-2xl h-28">
+    <article className="flex flex-col items-center justify-center w-full gap-2 px-5 py-4 mx-auto border-2 border-black shadow-md dark:border-white rounded-b-md rounded-tr-md rounded-tl-2xl h-28">
       {/* Dashboard */}
       <section className="flex flex-row items-center justify-between w-full">
         {/* Name */}

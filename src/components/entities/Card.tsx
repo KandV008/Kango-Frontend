@@ -81,8 +81,8 @@ function Card({ card, dashboardId }: componentProps) {
   const baseCardStyle =
     "flex flex-col items-start justify-between w-60 sm:w-68 h-32 sm:h-36 gap-2 m-auto border-2 rounded-2xl";
   const dragCardStyle = dragging
-    ? "border-gray-700 bg-gray-200 text-gray-600"
-    : "border-black text-black";
+    ? "dark:border-gray-400 border-gray-700 dark:bg-gray-700 bg-gray-200 dark:text-gray-400 text-gray-600"
+    : "dark:border-white border-black dark:text-white text-black";
 
   return (
     <article className={`${baseCardStyle} ${dragCardStyle}`} ref={ref}>
@@ -100,7 +100,7 @@ function Card({ card, dashboardId }: componentProps) {
             return (
               <Badge
                 key={tag.id}
-                className={`px-1 sm:px-2 border border-black h-fit ${textColor}`}
+                className={`px-1 sm:px-2 border dark:border-white border-black h-fit ${textColor}`}
                 style={{ backgroundColor: "#" + tagColor.hex }}
               >
                 {tag.label}

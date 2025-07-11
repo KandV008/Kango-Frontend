@@ -65,7 +65,7 @@ function Tag({ tag }: componentProps) {
   };
 
   return (
-    <article className="flex flex-row items-start justify-between w-full gap-1 p-2 border-2 border-black sm:gap-2 sm:m-auto sm:p-3 md:p-4 rounded-2xl">
+    <article className="flex flex-row items-start justify-between w-full gap-1 p-2 border-2 border-black dark:border-white sm:gap-2 sm:m-auto sm:p-3 md:p-4 rounded-2xl">
       {/* Info */}
       <section className="flex flex-row items-center gap-2 text-sm sm:text-base *:sm:font-semibold xl:font-bold size-full">
         <div

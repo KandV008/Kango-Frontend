@@ -1,4 +1,4 @@
-import { BadgePlus, CircleQuestionMark, Eye, Home, Plus } from "lucide-react";
+import { BadgePlus, Eye, Home, Plus } from "lucide-react";
 
 import {
   Sidebar,
@@ -34,6 +34,7 @@ import { useParams } from "react-router-dom";
 import { Input } from "../ui/input";
 import createLocalTemplateCard from "@/lib/forms/card/createLocalTemplateCard";
 import createLocalTag from "@/lib/forms/tag/createLocalTag";
+import { ModeToggle } from "../mode-toggle";
 
 interface componentProps {
   isSideBarOpen: boolean;
@@ -62,8 +63,11 @@ function SideBar({ isSideBarOpen, removeSideBar }: componentProps) {
           {" "}
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="text-lg font-semibold underline underline-offset-2">
+              <SidebarGroupLabel className="flex flex-row justify-between mb-1 text-lg font-semibold underline h-fit underline-offset-2">
                 Actions
+                <SidebarMenuSubButton asChild>
+                  <ModeToggle />
+                </SidebarMenuSubButton>
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu className="grid gap-5">
@@ -259,15 +263,6 @@ function SideBar({ isSideBarOpen, removeSideBar }: componentProps) {
                         <TagList dashboardId={id} />
                       </DialogContent>
                     </Dialog>
-                  </SidebarMenuItem>
-                  {/* Configuration */}
-                  <SidebarMenuItem className="grid gap-2">
-                    <SidebarMenuSubButton asChild>
-                      <a>
-                        <CircleQuestionMark />
-                        <span>[...]</span>
-                      </a>
-                    </SidebarMenuSubButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>

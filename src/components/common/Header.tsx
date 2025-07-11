@@ -116,7 +116,7 @@ function Header({ toggleSideBar }: componentProps) {
                 <span className="hidden sm:block">Files</span>
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="grid gap-2 p-5 mt-5 mr-5 w-fit bg-neutral-100 rounded-2xl">
+            <PopoverContent className="grid gap-2 p-5 mt-5 mr-5 w-fit dark:bg-neutral-900 bg-neutral-100 rounded-2xl">
               <Label>Handle Attached Files</Label>
               <Separator />
               <div className="flex flex-row gap-2">
@@ -187,7 +187,7 @@ function Header({ toggleSideBar }: componentProps) {
           <PopoverPortal>
             <PopoverContent
               sideOffset={10}
-              className="z-50 p-5 mt-5 mr-5 w-80 bg-neutral-100 rounded-2xl"
+              className="z-50 p-5 mt-5 mr-5 w-80 dark:bg-neutral-900 bg-neutral-100 rounded-2xl"
             >
               {isDashboardPage ? (
                 <TableForm dashboardId={id} />

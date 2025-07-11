@@ -122,6 +122,7 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
   return (
     <>
       <Popover>
+        {/* Trigger */}
         <PopoverTrigger className="hidden lg:block">
           <Button
             variant={"outline"}
@@ -135,7 +136,7 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
                 return (
                   <Badge
                     key={tag.id}
-                    className={`px-2 border border-black ${textColor}`}
+                    className={`px-2 border dark:border-white border-black ${textColor}`}
                     style={{ backgroundColor: "#" + tagColor.hex }}
                   >
                     {tag.label}
@@ -149,38 +150,37 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent side="right">
+        {/* Content */}
+        <PopoverContent side="right" className="w-80">
           <form
             action={updateCardTagListAction}
-            className="grid w-full h-full gap-2"
+            className="grid h-full gap-2 w-72"
           >
             <Label>Update Card's Tag List</Label>
             <Description>Select or unselect some tags.</Description>
-              <section className="flex flex-col justify-center gap-2">
-                {allTags.length > 0 ? (
-                  allTags.map((tag, index) => (
-                    <article
-                      key={"input-tag-" + tag.id}
-                      className="flex flex-row gap-1"
-                    >
-                      <Input
-                        type="checkbox"
-                        name={tagListName + index}
-                        value={tag.id}
-                        className="self-center size-5"
-                        defaultChecked={currentTags.some(
-                          (t) => t.id === tag.id
-                        )}
-                      />
-                      <Tag tag={tag} />
-                    </article>
-                  ))
-                ) : (
-                  <em className="w-full p-2 text-center">
-                    Currently, there is no tag available.
-                  </em>
-                )}
-              </section>
+            <section className="flex flex-col justify-start flex-grow gap-3 overflow-x-hidden w-72 h-96">
+              {allTags.length > 0 ? (
+                allTags.map((tag, index) => (
+                  <article
+                    key={"input-tag-" + tag.id}
+                    className="flex flex-row gap-1"
+                  >
+                    <Input
+                      type="checkbox"
+                      name={tagListName + index}
+                      value={tag.id}
+                      className="self-center size-5"
+                      defaultChecked={currentTags.some((t) => t.id === tag.id)}
+                    />
+                    <Tag tag={tag} />
+                  </article>
+                ))
+              ) : (
+                <em className="w-full p-2 text-center">
+                  Currently, there is no tag available.
+                </em>
+              )}
+            </section>
             <Button type="submit">
               <Pen className="mr-2 size-4" />
               Update
@@ -189,6 +189,7 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
         </PopoverContent>
       </Popover>
       <Dialog>
+        {/* Trigger */}
         <DialogTrigger className="block lg:hidden">
           <Button
             variant={"outline"}
@@ -216,15 +217,16 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
             )}
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        {/* Content */}
+        <DialogContent className="w-80">
           <form
             action={updateCardTagListAction}
-            className="grid w-full h-full gap-2"
+            className="grid items-center w-full h-full gap-2"
           >
             <Label>Update Card's Tag List</Label>
             <Description>Select or unselect some tags.</Description>
             <ScrollArea>
-              <section className="flex flex-col justify-center gap-2">
+              <section className="flex flex-col justify-start flex-grow w-64 gap-3 overflow-x-hidden h-96">
                 {allTags.length > 0 ? (
                   allTags.map((tag, index) => (
                     <article

@@ -76,7 +76,7 @@ function CheckComponent({ check, cardId, onRemoved }: componentProps) {
   };
 
   return (
-    <div className="flex flex-row justify-between gap-1 px-2 py-1 border border-gray-200 rounded-2xl">
+    <div className="flex flex-row justify-between gap-1 px-2 py-1 border border-gray-200 dark:border-gray-600 rounded-2xl">
       {/* Info */}
       <div className="flex flex-row items-center justify-start w-full gap-2">
         <Input

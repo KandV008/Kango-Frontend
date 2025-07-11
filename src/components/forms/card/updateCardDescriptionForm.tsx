@@ -55,7 +55,7 @@ function UpdateCardDescriptionForm({ card }: componentProps) {
             className="grid items-center w-56 break-words sm:w-full h-fit place-self-center"
           >
             {description && description.length !== 0 ? (
-              <p className="w-full text-center text-black break-all whitespace-pre-wrap">
+              <p className="w-full text-center text-black break-all whitespace-pre-wrap dark:text-white">
                 {description}
               </p>
             ) : (
