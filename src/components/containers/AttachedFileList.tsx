@@ -14,12 +14,17 @@ function AttachedFileList({ dashboardId }: componentProps) {
     fileToRemove: AttachedFileProps,
     attachedFiles: AttachedFileProps[]
   ) => {
-    const updatedFiles = attachedFiles.filter(
+    const index = attachedFiles.findIndex(
       (f) =>
-        f.fileName !== fileToRemove.fileName ||
-        f.fileUrl !== fileToRemove.fileUrl
+        f.fileName === fileToRemove.fileName &&
+        f.fileUrl === fileToRemove.fileUrl
     );
-    setAttachedFiles(updatedFiles);
+
+    if (index !== -1) {
+      const updatedFiles = [...attachedFiles];
+      updatedFiles.splice(index, 1);
+      setAttachedFiles(updatedFiles);
+    }
   };
 
   useEffect(() => {
