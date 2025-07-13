@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CardEntity } from "@/model/card/card";
 import Card from "../entities/Card";
 import { DashboardEntity } from "@/model/dashboard/dashboard";
+import { CardListContext } from "../contexts/cardList";
 
 interface componentProps {
   dashboardId: string | undefined;
@@ -10,7 +11,11 @@ interface componentProps {
 function TemplateCardList({ dashboardId }: componentProps) {
   const [globalCardList, setGlobalCardList] = useState<CardEntity[]>([]);
   const [localCardList, setLocalCardList] = useState<CardEntity[]>([]);
-  const allTemplates = [...globalCardList, ...localCardList];
+  const [allTemplates, setCardList] = useState<CardEntity[]>([]);
+  
+  useEffect(() => {
+    setCardList([...globalCardList, ...localCardList]);
+  }, [globalCardList, localCardList]);
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/global-template-cards`)
@@ -55,22 +60,21 @@ function TemplateCardList({ dashboardId }: componentProps) {
   }, [dashboardId]);
 
   return (
-    <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden h-96">
-      {allTemplates && allTemplates.length !== 0 ? (
-        <article className="grid w-full gap-1 overflow-y-scroll sm:gap-2 h-max">
-          {globalCardList.map((card) => (
-            <Card currentCard={card} key={"global-template-card-" + card.id} />
-          ))}
-          {localCardList.map((card) => (
-            <Card currentCard={card} key={"local-template-card-" + card.id} />
-          ))}
-        </article>
-      ) : (
-        <em className="w-full text-center ">
-          Currently, there is no card template available.
-        </em>
-      )}
-    </section>
+    <CardListContext.Provider value={{ cardList: allTemplates, setCardList }}>
+      <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden h-96">
+        {allTemplates && allTemplates.length !== 0 ? (
+          <article className="grid w-full gap-1 overflow-y-auto sm:gap-2 h-max">
+            {allTemplates.map((card) => (
+              <Card currentCard={card} key={"template-card-" + card.id} />
+            ))}
+          </article>
+        ) : (
+          <em className="w-full text-center ">
+            Currently, there is no card template available.
+          </em>
+        )}
+      </section>
+    </CardListContext.Provider>
   );
 }
 

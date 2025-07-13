@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CardContext } from "@/components/contexts/cardContext";
+import { TagListContext } from "@/components/contexts/tagListContext";
 
 interface componentProps {
   dashboardId?: string;
@@ -25,7 +26,12 @@ function UpdateCardTagsForm({ dashboardId }: componentProps) {
 
   const [globalTagList, setGlobalTagList] = useState<TagEntity[]>([]);
   const [localTagList, setLocalTagList] = useState<TagEntity[]>([]);
-  const allTags = [...globalTagList, ...localTagList];
+  const [allTags, setTagList] = useState<TagEntity[]>([]);
+  
+  useEffect(() => {
+    setTagList([...globalTagList, ...localTagList]);
+  }, [globalTagList, localTagList]);
+  
   const [currentTags, setCurrentTags] = useState<TagEntity[]>(card.tagList);
 
   const tagListName = "tag-input-";
@@ -126,7 +132,7 @@ function UpdateCardTagsForm({ dashboardId }: componentProps) {
   };
 
   return (
-    <>
+    <TagListContext.Provider value={{ tagList: allTags, setTagList }}>
       <Popover>
         {/* Trigger */}
         <PopoverTrigger className="hidden lg:block">
@@ -265,7 +271,7 @@ function UpdateCardTagsForm({ dashboardId }: componentProps) {
           </form>
         </DialogContent>
       </Dialog>
-    </>
+    </TagListContext.Provider>
   );
 }
 

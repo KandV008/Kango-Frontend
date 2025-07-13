@@ -40,7 +40,7 @@ function Card({ currentCard, dashboardId }: componentProps) {
   const cardColor = getDataColor(card.color ? card.color : "BLACK");
   const visibleTags = card.tagList ? card.tagList.slice(0, 2) : [];
 
-  const deleteDashboardAction = async () => {
+  const deleteCarddAction = async () => {
     try {
       const response = await fetch(
         `http://localhost:8080/api/cards/${card.id}`,
@@ -142,7 +142,7 @@ function Card({ currentCard, dashboardId }: componentProps) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={deleteDashboardAction}>
+                  <AlertDialogAction onClick={deleteCarddAction}>
                     Continue
                   </AlertDialogAction>
                 </AlertDialogFooter>
