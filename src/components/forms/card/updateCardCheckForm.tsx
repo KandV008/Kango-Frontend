@@ -2,20 +2,18 @@ import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Button } from "../../ui/button";
 import { Plus } from "lucide-react";
-import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import type { CheckProps } from "@/model/utils/check";
 import CheckComponent from "@/components/entities/Check";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { CardContext } from "@/components/contexts/cardContext";
 
-interface componentProps {
-  card: CardEntity;
-}
+function UpdateCardCheckForm() {
+  const { card, setCard } = useContext(CardContext);
 
-function UpdateCardCheckForm({ card }: componentProps) {
   const sortedChecks = [...card.checks].sort(
     (a, b) => a.position! - b.position!
   );
@@ -30,6 +28,10 @@ function UpdateCardCheckForm({ card }: componentProps) {
       }));
 
     setCurrentCheks(updatedChecks);
+    setCard({
+      ...card,
+      checks: updatedChecks,
+    });
   };
 
   const addCheckToCardAction = async (formData: FormData) => {
@@ -59,6 +61,10 @@ function UpdateCardCheckForm({ card }: componentProps) {
 
       toast.success("Check has been added to card.");
       setCurrentCheks((prev) => [...prev, check]);
+      setCard({
+        ...card,
+        checks: currentChecks,
+      });
     } catch (error) {
       console.error("Error adding check to card:", error);
       toast.error("Error adding check to card. Please try again.");

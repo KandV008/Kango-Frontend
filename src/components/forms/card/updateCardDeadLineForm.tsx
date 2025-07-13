@@ -2,19 +2,17 @@ import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Button } from "../../ui/button";
 import { Pen } from "lucide-react";
-import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
 import { InputCalendar } from "@/components/inputs/InputCalendar";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { getFormattedDate } from "@/lib/utils";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { CardContext } from "@/components/contexts/cardContext";
 
-interface componentProps {
-  card: CardEntity;
-}
+function UpdateCardDeadLineForm() {
+  const { card, setCard } = useContext(CardContext);
 
-function UpdateCardDeadLineForm({ card }: componentProps) {
   const [deadLine, setDeadLine] = useState<Date | null>(card.deadLine);
 
   const udpateCardTitleAction = async (formData: FormData) => {
@@ -43,6 +41,10 @@ function UpdateCardDeadLineForm({ card }: componentProps) {
 
       toast.success("Card has been updated.");
       setDeadLine(parsedDate);
+      setCard({
+        ...card,
+        deadLine: parsedDate
+      })
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");
@@ -96,7 +98,10 @@ function UpdateCardDeadLineForm({ card }: componentProps) {
           </Button>{" "}
         </DialogTrigger>
         <DialogContent className="grid items-center w-fit">
-          <form action={udpateCardTitleAction} className="grid justify-between gap-2 mx-auto">
+          <form
+            action={udpateCardTitleAction}
+            className="grid justify-between gap-2 mx-auto"
+          >
             <Label htmlFor="title-input">Update Card's DeadLine</Label>
             <InputCalendar currentDate={card.deadLine} />
             <Button type="submit">

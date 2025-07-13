@@ -2,19 +2,17 @@ import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Button } from "../../ui/button";
 import { Pen } from "lucide-react";
-import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
 import { colorValueOf, getDataColor, type Color } from "@/model/utils/color";
 import { InputColor } from "@/components/inputs/InputColor";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { CardContext } from "@/components/contexts/cardContext";
 
-interface componentProps {
-  card: CardEntity;
-}
+function UpdateCardColorForm() {
+  const { card, setCard } = useContext(CardContext);
 
-function UpdateCardColorForm({ card }: componentProps) {
   const [color, setColor] = useState<Color>(card.color ? card.color : "BLACK");
   const cardColor = getDataColor(color);
 
@@ -43,6 +41,10 @@ function UpdateCardColorForm({ card }: componentProps) {
 
       const newColor: Color = colorValueOf(cardDTO.color!);
       setColor(newColor);
+      setCard({
+        ...card,
+        color: newColor
+      })
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");

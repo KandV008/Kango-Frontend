@@ -5,7 +5,7 @@ import { Pen } from "lucide-react";
 import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import { getDataColor } from "@/model/utils/color";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TagEntity } from "@/model/tag/tag";
 import getAllTags from "@/lib/forms/tag/getAllTags";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -14,13 +14,15 @@ import { Description } from "@radix-ui/react-dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { CardContext } from "@/components/contexts/cardContext";
 
 interface componentProps {
-  card: CardEntity;
   dashboardId?: string;
 }
 
-function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
+function UpdateCardTagsForm({ dashboardId }: componentProps) {
+  const { card, setCard } = useContext(CardContext);
+
   const [globalTagList, setGlobalTagList] = useState<TagEntity[]>([]);
   const [localTagList, setLocalTagList] = useState<TagEntity[]>([]);
   const allTags = [...globalTagList, ...localTagList];
@@ -53,6 +55,10 @@ function UpdateCardTagsForm({ card, dashboardId }: componentProps) {
     );
 
     setCurrentTags(updatedCurrentTags);
+    setCard({
+      ...card,
+      tagList: updatedCurrentTags
+    })
   };
 
   const removeTagsFromCard = async (

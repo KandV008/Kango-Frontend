@@ -462,7 +462,7 @@ function Table({ table }: componentProps) {
             <DropZone zone={0} destination={table.id} type={"CARD"} />
             {sortedCardList.map((card) => (
               <div className="grid gap-1 sm:gap-2" key={"card-" + card.id}>
-                <Card card={card} dashboardId={table.id.toString()} />
+                <Card currentCard={card} dashboardId={table.id.toString()} />
                 <DropZone
                   zone={card.position + 1}
                   destination={table.id}

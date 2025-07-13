@@ -2,20 +2,18 @@ import { Label } from "../../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Button } from "../../ui/button";
 import { Plus } from "lucide-react";
-import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import AttachedFile from "@/components/entities/AttachedFile";
 import type { AttachedFileProps } from "@/model/utils/attachedFile";
 import AttachedFileForm from "../attachedFileForm";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { CardContext } from "@/components/contexts/cardContext";
 
-interface componentProps {
-  card: CardEntity;
-}
+function UpdateCardFileForm() {
+  const { card, setCard } = useContext(CardContext);
 
-function UpdateCardFileForm({ card }: componentProps) {
   const [currentFiles, setCurrentFiles] = useState<AttachedFileProps[]>(
     card.attachedFiled
   );
@@ -46,6 +44,10 @@ function UpdateCardFileForm({ card }: componentProps) {
 
       toast.success("File has been added to card.");
       setCurrentFiles((prev) => [...prev, file]);
+      setCard({
+        ...card,
+        attachedFiled: [...currentFiles, file],
+      });
     } catch (error) {
       console.error("Error adding file to card:", error);
       toast.error("Error adding file to card. Please try again.");
@@ -66,6 +68,10 @@ function UpdateCardFileForm({ card }: componentProps) {
       const updatedFiles = [...attachedFiles];
       updatedFiles.splice(index, 1);
       setCurrentFiles(updatedFiles);
+      setCard({
+        ...card,
+        attachedFiled: updatedFiles,
+      });
     }
   };
 

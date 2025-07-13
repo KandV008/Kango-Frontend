@@ -92,7 +92,7 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
                   value={card.id.toString()}
                   key={"template-card-" + card.id}
                 />
-                <Card card={card} />
+                <Card currentCard={card} />
               </div>
             ))}
           </RadioGroup>

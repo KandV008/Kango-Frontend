@@ -13,7 +13,7 @@ import {
 import { toast } from "sonner";
 import { File, SquareCheck, Text, Trash } from "lucide-react";
 import { getDataColor } from "@/model/utils/color";
-import type { CardEntity } from "@/model/card/card";
+import { CardEntity } from "@/model/card/card";
 import { useContext, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
@@ -22,18 +22,20 @@ import { Separator } from "../ui/separator";
 import { getFormattedDate } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import { CardListContext } from "../contexts/cardList";
+import { CardContext } from "../contexts/cardContext";
 
 interface componentProps {
-  card: CardEntity;
+  currentCard: CardEntity;
   dashboardId?: string;
 }
 
-function Card({ card, dashboardId }: componentProps) {
+function Card({ currentCard, dashboardId }: componentProps) {
+  const [card, setCard] = useState<CardEntity>(currentCard);
   const cardColor = getDataColor(card.color ? card.color : "BLACK");
   const visibleTags = card.tagList ? card.tagList.slice(0, 2) : [];
   const { cardList, setCardList } = useContext(CardListContext);
 
-  const deleteDashboardACtion = async () => {
+  const deleteDashboardAction = async () => {
     try {
       const response = await fetch(
         `http://localhost:8080/api/cards/${card.id}`,
@@ -88,7 +90,8 @@ function Card({ card, dashboardId }: componentProps) {
     : "dark:border-white border-black dark:text-white text-black";
 
   return (
-    <article className={`${baseCardStyle} ${dragCardStyle}`} ref={ref}>
+    <CardContext value={{card, setCard}}>
+      <article className={`${baseCardStyle} ${dragCardStyle}`} ref={ref}>
       {/* Top */}
       <section
         className="flex flex-row justify-between w-full p-1 sm:p-2 h-fit rounded-t-xl"
@@ -134,7 +137,7 @@ function Card({ card, dashboardId }: componentProps) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={deleteDashboardACtion}>
+                <AlertDialogAction onClick={deleteDashboardAction}>
                   Continue
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -182,6 +185,7 @@ function Card({ card, dashboardId }: componentProps) {
         </article>
       </section>
     </article>
+    </CardContext>
   );
 }
 

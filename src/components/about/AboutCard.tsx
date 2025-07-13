@@ -37,32 +37,32 @@ function AboutCard({ card, dashboardId }: componentProps) {
         <DialogTitle>
           <DialogHeader className="hidden sm:flex-row sm:flex">
             {/* Color */}
-            <UpdateCardColorForm card={card} />
+            <UpdateCardColorForm />
             {/* Base Info */}
             <div className="flex flex-col items-center justify-around w-full ">
               {/* Title */}
-              <UpdateCardTitleForm card={card} />
+              <UpdateCardTitleForm />
               {/* Card Type */}
               <h2 className="text-sm sm:text-base">{card.cardType}</h2>
             </div>
             {/* Other Info */}
             <div className="flex flex-col items-center justify-around w-full ">
               {/* Dead Line */}
-              <UpdateCardDeadLineForm card={card} />
+              <UpdateCardDeadLineForm />
             </div>
           </DialogHeader>
           <div className="flex flex-row justify-evenly sm:hidden">
             <div className="flex flex-col items-center w-20 gap-1">
               {/* Color */}
-              <UpdateCardColorForm card={card} />
+              <UpdateCardColorForm />
               {/* Card Type */}
               <h2 className="text-sm sm:text-base">{card.cardType}</h2>
             </div>
             <div className="flex flex-col items-center w-20 gap-1">
               {/* Title */}
-              <UpdateCardTitleForm card={card} />
+              <UpdateCardTitleForm />
               {/* Dead Line */}
-              <UpdateCardDeadLineForm card={card} />
+              <UpdateCardDeadLineForm />
             </div>
           </div>
         </DialogTitle>
@@ -70,17 +70,17 @@ function AboutCard({ card, dashboardId }: componentProps) {
         {/* Body */}
         <DialogDescription className="grid gap-1 sm:gap-2">
           {/* Description */}
-          <UpdateCardDescriptionForm card={card} />
+          <UpdateCardDescriptionForm />
           {/* Tags */}
-          <UpdateCardTagsForm card={card} dashboardId={dashboardId} />
+          <UpdateCardTagsForm dashboardId={dashboardId} />
         </DialogDescription>
         <Separator className="hidden sm:block" />
         {/* Footer */}
         <DialogFooter>
           {/* Checks */}
-          <UpdateCardCheckForm card={card} />
+          <UpdateCardCheckForm />
           {/* Attached Files */}
-          <UpdateCardFileForm card={card} />
+          <UpdateCardFileForm />
         </DialogFooter>
       </DialogContent>{" "}
     </Dialog>

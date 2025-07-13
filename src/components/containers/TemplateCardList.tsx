@@ -59,10 +59,10 @@ function TemplateCardList({ dashboardId }: componentProps) {
       {allTemplates && allTemplates.length !== 0 ? (
         <article className="grid w-full gap-1 overflow-y-scroll sm:gap-2 h-max">
           {globalCardList.map((card) => (
-            <Card card={card} key={"global-template-card-" + card.id} />
+            <Card currentCard={card} key={"global-template-card-" + card.id} />
           ))}
           {localCardList.map((card) => (
-            <Card card={card} key={"local-template-card-" + card.id} />
+            <Card currentCard={card} key={"local-template-card-" + card.id} />
           ))}
         </article>
       ) : (

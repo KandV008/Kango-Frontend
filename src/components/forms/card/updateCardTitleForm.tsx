@@ -3,17 +3,15 @@ import { Input } from "../../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Button } from "../../ui/button";
 import { Pen } from "lucide-react";
-import type { CardEntity } from "@/model/card/card";
 import { toast } from "sonner";
 import type { CardDTO } from "@/model/card/cardDTO";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { CardContext } from "@/components/contexts/cardContext";
 
-interface componentProps {
-  card: CardEntity;
-}
-
-function UpdateCardTitleForm({ card }: componentProps) {
+function UpdateCardTitleForm() {
+    const { card, setCard } = useContext(CardContext);
+  
   const [title, setTitle] = useState<string>(card.title);
 
   const udpateCardTitleAction = async (formData: FormData) => {
@@ -40,6 +38,10 @@ function UpdateCardTitleForm({ card }: componentProps) {
 
       toast.success("Card has been updated.");
       setTitle(newTitle!);
+      setCard({
+        ...card,
+        title: newTitle!
+      })
     } catch (error) {
       console.error("Error updating card:", error);
       toast.error("Error updating card. Please try again.");
