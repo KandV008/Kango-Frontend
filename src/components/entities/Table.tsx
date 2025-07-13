@@ -1,6 +1,14 @@
 import type { TableEntity } from "@/model/table/table";
 import { Button } from "../ui/button";
-import { ArrowUpDown, Copy, Menu, Move, Pen, Plus, Trash } from "lucide-react";
+import {
+  ArrowLeftRight,
+  ArrowUpDown,
+  Copy,
+  Menu,
+  Pen,
+  Plus,
+  Trash,
+} from "lucide-react";
 import { Label } from "../ui/label";
 import Card from "./Card";
 import { Popover, PopoverContent } from "../ui/popover";
@@ -47,19 +55,25 @@ import UpdateTableNameForm from "../forms/table/updateTableNameForm";
 import { TableListContext } from "../contexts/tableList";
 import { CardListContext } from "../contexts/cardList";
 import { CardEntity } from "@/model/card/card";
+import { sortCardList, valueOfCardListSort } from "@/model/enums/cardListSort";
+import getDashboard from "@/lib/forms/dashboard/getDashboard";
 
 interface componentProps {
   table: TableEntity;
-  tables: TableEntity[];
+  onChange: (tableList: TableEntity[]) => void;
 }
 
-function Table({ table, tables }: componentProps) {
-  const [cardList, setCardList] = useState<CardEntity[]>(table.cardList);
+function Table({ table }: componentProps) {
+  const [cardList, setCardList] = useState<CardEntity[]>([]);
+  const { tableList, setTableList } = useContext(TableListContext);
+
+  useEffect(() => {
+    setCardList(table.cardList);
+  }, [table.cardList]);
 
   const sortedCardList = [...cardList].sort((a, b) => a.position - b.position);
-  const otherTables = [...tables].filter((a) => a.id !== table.id);
+  const otherTables = [...tableList].filter((a) => a.id !== table.id);
   const [tableName, setTableName] = useState<string>(table.name);
-  const { setTableList } = useContext(TableListContext);
 
   const deleteTableAction = async () => {
     try {
@@ -76,7 +90,7 @@ function Table({ table, tables }: componentProps) {
 
       toast.success("Table has been deleted.");
 
-      const newTables = tables.filter((t) => t.id !== table.id);
+      const newTables = tableList.filter((t) => t.id !== table.id);
       setTableList(newTables);
     } catch (error) {
       console.error("Error deleting table:", error);
@@ -86,7 +100,6 @@ function Table({ table, tables }: componentProps) {
 
   const sortCardListAction = async (formData: FormData) => {
     const sort = formData.get("sortType")?.toString();
-    console.log("SORT", sort);
 
     try {
       const response = await fetch(
@@ -108,8 +121,9 @@ function Table({ table, tables }: componentProps) {
       }
 
       toast.success("Card List has been sorted.");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      window.location.reload();
+      const valueOf = valueOfCardListSort(sort!);
+      const newSortedCardList = sortCardList(cardList, valueOf!);
+      setCardList(newSortedCardList);
     } catch (error) {
       console.error("Error sorting card list:", error);
       toast.error("Error sorting card list. Please try again.");
@@ -118,14 +132,27 @@ function Table({ table, tables }: componentProps) {
 
   const handleMoveCardListAction = async (formData: FormData) => {
     await moveCardListFromTableToAnotherTable(formData);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    window.location.reload();
+    const sortedTableList = await getDashboard(table.dashboard.toString());
+
+    setTableList(
+      sortedTableList.map((table) => ({
+        ...table,
+        cardList: [...table.cardList],
+      }))
+    );
   };
 
   const handleCopyCardListAction = async (formData: FormData) => {
     await copyCardListFromTableToAnotherTable(formData);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    window.location.reload();
+
+    const sortedTableList = await getDashboard(table.dashboard.toString());
+
+    setTableList(
+      sortedTableList.map((table) => ({
+        ...table,
+        cardList: [...table.cardList],
+      }))
+    );
   };
 
   const handleCardCreationAction = async (formData: FormData) => {
@@ -286,7 +313,7 @@ function Table({ table, tables }: componentProps) {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline">
-                    <Move />
+                    <ArrowLeftRight />
                     Move Card List
                   </Button>
                 </PopoverTrigger>

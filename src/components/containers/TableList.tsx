@@ -6,10 +6,7 @@ import updateTablePositionFromDashboard from "@/lib/forms/dashboard/updateTableP
 import { TableListContext } from "../contexts/tableList";
 
 function TableList() {
-
-  const { tableList } = useContext(TableListContext);
-
-  const sortedTableList = [...tableList].sort((a, b) => a.position - b.position);
+  const { tableList, setTableList } = useContext(TableListContext);
 
   useEffect(() => {
     return monitorForElements({
@@ -50,12 +47,12 @@ function TableList() {
 
   return (
     <div className="flex flex-row h-full gap-2 p-5 ">
-      {sortedTableList.length !== 0 && (
+      {tableList.length !== 0 && (
         <>
           <DropZone zone={0} destination={tableList[0].dashboard} type="TABLE" />
           {tableList.map((table) => (
             <div className="flex flex-row h-full gap-2" key={table.id}>
-              <Table table={table} tables={tableList} />
+              <Table table={table} onChange={setTableList}/>
               <DropZone
                 zone={table.position + 1}
                 destination={table.dashboard}

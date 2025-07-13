@@ -2,7 +2,7 @@ import Header from "@/components/common/Header";
 import SideBar from "@/components/common/SideBar";
 import TableList from "@/components/containers/TableList";
 import { TableListContext } from "@/components/contexts/tableList";
-import { DashboardEntity } from "@/model/dashboard/dashboard";
+import getDashboard from "@/lib/forms/dashboard/getDashboard";
 import { TableEntity } from "@/model/table/table";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -17,19 +17,8 @@ function DashboardPage() {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/dashboards/${id}`
-        );
-
-        if (!response.ok) {
-          throw new Error(
-            `Error fetching dashboard (status: ${response.status})`
-          );
-        }
-
-        const data = await response.json();
-        const mappedDashboard = DashboardEntity.fromJSON(data);
-        setTableList(mappedDashboard.tableList);
+        const sortedTableList = await getDashboard(id!);
+        setTableList([...sortedTableList])
         setLoading(false);
       } catch (err) {
         console.error("Fetch error:", err);
