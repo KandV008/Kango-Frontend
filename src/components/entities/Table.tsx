@@ -41,7 +41,7 @@ import createCard from "@/lib/forms/card/createCard";
 import { Input } from "../ui/input";
 import { InputSort } from "../inputs/InputSort";
 import { DropZone } from "../inputs/DropZone";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import updateCardPosition from "@/lib/forms/table/updateCardPositionFromTable";
 import moveCardFormTableToAnotherTable from "@/lib/forms/table/moveCardFromTableToAnotherTable";
@@ -74,6 +74,8 @@ function Table({ table }: componentProps) {
   const sortedCardList = [...cardList].sort((a, b) => a.position - b.position);
   const otherTables = [...tableList].filter((a) => a.id !== table.id);
   const [tableName, setTableName] = useState<string>(table.name);
+
+  console.log("CARD-LIST", sortedCardList);
 
   const deleteTableAction = async () => {
     try {
@@ -132,27 +134,14 @@ function Table({ table }: componentProps) {
 
   const handleMoveCardListAction = async (formData: FormData) => {
     await moveCardListFromTableToAnotherTable(formData);
-    const sortedTableList = await getDashboard(table.dashboard.toString());
 
-    setTableList(
-      sortedTableList.map((table) => ({
-        ...table,
-        cardList: [...table.cardList],
-      }))
-    );
+    await updateTableList();
   };
 
   const handleCopyCardListAction = async (formData: FormData) => {
     await copyCardListFromTableToAnotherTable(formData);
 
-    const sortedTableList = await getDashboard(table.dashboard.toString());
-
-    setTableList(
-      sortedTableList.map((table) => ({
-        ...table,
-        cardList: [...table.cardList],
-      }))
-    );
+    await updateTableList();
   };
 
   const handleCardCreationAction = async (formData: FormData) => {
@@ -161,6 +150,17 @@ function Table({ table }: componentProps) {
 
     setCardList((prev) => [...prev, newCard]);
   };
+
+  const updateTableList = useCallback(async () => {
+    const sortedTableList = await getDashboard(table.dashboard.toString());
+
+    setTableList(
+      sortedTableList.map((table) => ({
+        ...table,
+        cardList: [...table.cardList],
+      }))
+    );
+  }, [setTableList, table.dashboard]);
 
   /* Monitoring Drag & Drop Logic */
   useEffect(() => {
@@ -185,22 +185,31 @@ function Table({ table }: componentProps) {
         const cardPosition = Number(source.data.position);
         const cardId = Number(source.data.card);
 
+        console.log("DESTINY TABLE", destinyTableId);
+        console.log("ORIGIN TABLE", originTableId);
+        console.log("DESTINY ZONE", destinyTableZone);
+        console.log("CARD POSITION", cardPosition);
+
         if (destinyTableId === originTableId) {
           const isNotNecessaryToMove =
             destinyTableZone === cardPosition ||
-            destinyTableZone === cardPosition;
+            destinyTableZone === cardPosition + 1;
 
           if (isNotNecessaryToMove) {
+            console.warn("IT IS NOT NECCESSARY TO MOVE");
             return;
           }
 
           const newPosition =
-            cardPosition - destinyTableZone < 0
+            cardPosition < destinyTableZone
               ? destinyTableZone - 1
               : destinyTableZone;
 
+          console.log("NEW POSITION:", newPosition);
+          console.log("ACTION:", "UPDATE CARD POSITION");
           await updateCardPosition(destinyTableId, cardId, newPosition);
         } else {
+          console.log("ACTION:", "MOVE CARD FROM TABLE TO ANOTHER TABLE");
           await moveCardFormTableToAnotherTable(
             originTableId,
             cardId,
@@ -209,11 +218,10 @@ function Table({ table }: componentProps) {
           );
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        window.location.reload();
+        await updateTableList();
       },
     });
-  }, []);
+  }, [updateTableList]);
 
   /* Drag Logic */
   const ref = useRef(null);

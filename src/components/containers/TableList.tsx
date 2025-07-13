@@ -1,12 +1,28 @@
 import Table from "../entities/Table";
 import { DropZone } from "../inputs/DropZone";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import updateTablePositionFromDashboard from "@/lib/forms/dashboard/updateTablePositionFromDashboard";
 import { TableListContext } from "../contexts/tableList";
+import getDashboard from "@/lib/forms/dashboard/getDashboard";
+import { useParams } from "react-router-dom";
 
 function TableList() {
+  const { id } = useParams();
   const { tableList, setTableList } = useContext(TableListContext);
+
+  const updateTableList = useCallback(async () => {
+    if (id) {
+      const sortedTableList = await getDashboard(id);
+
+      setTableList(
+        sortedTableList.map((table) => ({
+          ...table,
+          cardList: [...table.cardList],
+        }))
+      );
+    }
+  }, [id, setTableList]);
 
   useEffect(() => {
     return monitorForElements({
@@ -24,7 +40,7 @@ function TableList() {
         const tablePosition = Number(source.data.position);
         const tableId = Number(source.data.table);
 
-        const isNotNecessaryToMove = destinyTableZone === tablePosition;
+        const isNotNecessaryToMove = destinyTableZone === tablePosition || destinyTableZone === tablePosition + 1;
 
         if (isNotNecessaryToMove) return;
 
@@ -39,20 +55,23 @@ function TableList() {
           newPosition
         );
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        window.location.reload();
+        await updateTableList();
       },
     });
-  }, []);
+  }, [updateTableList]);
 
   return (
     <div className="flex flex-row h-full gap-2 p-5 ">
       {tableList.length !== 0 && (
         <>
-          <DropZone zone={0} destination={tableList[0].dashboard} type="TABLE" />
+          <DropZone
+            zone={0}
+            destination={tableList[0].dashboard}
+            type="TABLE"
+          />
           {tableList.map((table) => (
             <div className="flex flex-row h-full gap-2" key={table.id}>
-              <Table table={table} onChange={setTableList}/>
+              <Table table={table} onChange={setTableList} />
               <DropZone
                 zone={table.position + 1}
                 destination={table.dashboard}
