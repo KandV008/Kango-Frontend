@@ -58,9 +58,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract version from package.json
+      - name: Generate tag from package.json
         id: project
-        run: echo "tag=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          printf "tag=%s\n" "$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Push to Docker Hub
         uses: docker/build-push-action@v6
