@@ -1,6 +1,8 @@
 import type { TagDTO } from "@/model/tag/tagDTO";
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function createGlobalTag(formData: FormData) {
     const tagDTO: TagDTO = {
         label: formData.get("label")?.toString(),
@@ -9,7 +11,7 @@ export default async function createGlobalTag(formData: FormData) {
 
     };
 
-    const res = await fetch("http://localhost:8080/api/tags", {
+    const res = await fetch(`${BACKEND_URL}/api/tags`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

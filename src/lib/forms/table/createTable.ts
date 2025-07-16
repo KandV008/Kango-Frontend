@@ -2,6 +2,8 @@ import { DashboardEntity } from "@/model/dashboard/dashboard";
 import type { TableDTO } from "@/model/table/tableDTO";
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function createTable(formData: FormData) {
   const dashboardId = formData.get("dashboard_id")!.toString();
   const tableDTO: TableDTO = {
@@ -9,7 +11,7 @@ export default async function createTable(formData: FormData) {
     cardList: []
   };
 
-  const createTableRes = await fetch("http://localhost:8080/api/tables", {
+  const createTableRes = await fetch(`${BACKEND_URL}/api/tables`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -26,7 +28,7 @@ export default async function createTable(formData: FormData) {
   const createdTable = await createTableRes.json();
   const tableId = createdTable.id;
 
-  const addTableRes = await fetch(`http://localhost:8080/api/dashboards/${dashboardId}/tables`, {
+  const addTableRes = await fetch(`${BACKEND_URL}/api/dashboards/${dashboardId}/tables`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

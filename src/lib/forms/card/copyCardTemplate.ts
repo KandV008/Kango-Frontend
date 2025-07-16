@@ -1,12 +1,14 @@
 import { TableEntity } from "@/model/table/table";
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function copyCardTemplate(formData: FormData) {
     const templateCardId = formData.get("card_id")?.toString();
     const tableId = formData.get("table_id")?.toString()
     
     const createCardRes = await fetch(
-      `http://localhost:8080/api/cards/${templateCardId}/copy`,
+      `${BACKEND_URL}/api/cards/${templateCardId}/copy`,
       {
         method: "POST",
         headers: {
@@ -29,7 +31,7 @@ export default async function copyCardTemplate(formData: FormData) {
     const cardId = createdCard.id;
 
     const addCardRes = await fetch(
-      `http://localhost:8080/api/tables/${tableId}/cards`,
+      `${BACKEND_URL}/api/tables/${tableId}/cards`,
       {
         method: "POST",
         headers: {

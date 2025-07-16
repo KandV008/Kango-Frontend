@@ -3,6 +3,8 @@ import { DashboardEntity } from "@/model/dashboard/dashboard";
 import type { AttachedFileProps } from "@/model/utils/attachedFile";
 import AttachedFile from "../entities/AttachedFile";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   dashboardId: string | undefined;
 }
@@ -31,7 +33,7 @@ function AttachedFileList({ dashboardId }: componentProps) {
     const fetchDashboard = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/dashboards/${dashboardId}`
+          `${BACKEND_URL}/api/dashboards/${dashboardId}`
         );
 
         if (!response.ok) {

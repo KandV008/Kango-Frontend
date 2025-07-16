@@ -1,7 +1,9 @@
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function updateCardPosition(tableId: number, cardId: number, newPosition: number) {
-  const res = await fetch(`http://localhost:8080/api/tables/${tableId}/cards/${cardId}/position?position=${newPosition}`, {
+  const res = await fetch(`${BACKEND_URL}/api/tables/${tableId}/cards/${cardId}/position?position=${newPosition}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

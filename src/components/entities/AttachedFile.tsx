@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { SquareArrowOutUpRight, X } from "lucide-react";
 import type { AttachedFileProps } from "@/model/utils/attachedFile";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   attachedFile: AttachedFileProps;
   dashboardId?: string;
@@ -34,7 +36,7 @@ function AttachedFile({
     const entityRoute = mode === "DASHBOARD" ? "dashboards" : "cards";
     try {
       const response = await fetch(
-        `http://localhost:8080/api/${entityRoute}/${actionId}/attached-files`,
+        `${BACKEND_URL}/api/${entityRoute}/${actionId}/attached-files`,
         {
           method: "DELETE",
           headers: {

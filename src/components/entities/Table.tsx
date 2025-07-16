@@ -58,6 +58,8 @@ import { CardEntity } from "@/model/card/card";
 import { sortCardList, valueOfCardListSort } from "@/model/enums/cardListSort";
 import getDashboard from "@/lib/forms/dashboard/getDashboard";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   table: TableEntity;
   onChange: (tableList: TableEntity[]) => void;
@@ -80,7 +82,7 @@ function Table({ table }: componentProps) {
   const deleteTableAction = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/tables/${table.id}`,
+        `${BACKEND_URL}/api/tables/${table.id}`,
         {
           method: "DELETE",
         }
@@ -105,7 +107,7 @@ function Table({ table }: componentProps) {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/tables/${
+        `${BACKEND_URL}/api/tables/${
           table.id
         }/sort?sort=${encodeURIComponent(sort || "")}`,
         {

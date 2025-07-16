@@ -1,6 +1,8 @@
 import type { CardDTO } from "@/model/card/cardDTO";
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function createLocalTemplateCard(formData: FormData) {
     const dashboardId = formData.get("dashboard_id")?.toString();
     const cardDTO: CardDTO = {
@@ -8,7 +10,7 @@ export default async function createLocalTemplateCard(formData: FormData) {
         cardType: "LOCAL_TEMPLATE",
     };
 
-    const createCardRes = await fetch("http://localhost:8080/api/cards", {
+    const createCardRes = await fetch(`${BACKEND_URL}/api/cards`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -24,7 +26,7 @@ export default async function createLocalTemplateCard(formData: FormData) {
     const createdCard = await createCardRes.json();
     const cardId = createdCard.id;
 
-    const res = await fetch(`http://localhost:8080/api/dashboards/${dashboardId}/template-cards`, {
+    const res = await fetch(`${BACKEND_URL}/api/dashboards/${dashboardId}/template-cards`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

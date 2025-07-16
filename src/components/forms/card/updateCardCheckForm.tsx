@@ -11,6 +11,8 @@ import { useContext, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CardContext } from "@/components/contexts/cardContext";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 function UpdateCardCheckForm() {
   const { card, setCard } = useContext(CardContext);
 
@@ -43,7 +45,7 @@ function UpdateCardCheckForm() {
       };
 
       const response = await fetch(
-        `http://localhost:8080/api/cards/${card.id}/checks`,
+        `${BACKEND_URL}/api/cards/${card.id}/checks`,
         {
           method: "POST",
           headers: {

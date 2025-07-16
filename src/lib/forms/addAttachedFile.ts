@@ -1,6 +1,8 @@
 import type { AttachedFileProps } from "@/model/utils/attachedFile";
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function addAttachedFile(formData: FormData) {
     const dashboardId = formData.get("dashboard_id")?.toString();
     const attachedFile: AttachedFileProps = {
@@ -8,7 +10,7 @@ export default async function addAttachedFile(formData: FormData) {
         fileUrl: formData.get("file-url")?.toString(),
     };
 
-    const res = await fetch(`http://localhost:8080/api/dashboards/${dashboardId}/attached-files`, {
+    const res = await fetch(`${BACKEND_URL}/api/dashboards/${dashboardId}/attached-files`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

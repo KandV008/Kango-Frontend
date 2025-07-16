@@ -8,6 +8,8 @@ import type { DashboardEntity } from "@/model/dashboard/dashboard";
 import type { DashboardDTO } from "@/model/dashboard/dashboardDTO";
 import { useState } from "react";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   dashboard: DashboardEntity;
   updatedAction: (newValue: string) => void;
@@ -23,7 +25,7 @@ function UpdateDashboardNameForm({ dashboard, updatedAction }: componentProps) {
       };
 
       const response = await fetch(
-        `http://localhost:8080/api/dashboards/${dashboard.id}/name`,
+        `${BACKEND_URL}/api/dashboards/${dashboard.id}/name`,
         {
           method: "PUT",
           headers: {

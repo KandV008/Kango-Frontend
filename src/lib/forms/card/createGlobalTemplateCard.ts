@@ -1,13 +1,15 @@
 import type { CardDTO } from "@/model/card/cardDTO";
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function createGlobalTemplateCard(formData: FormData) {
     const cardDTO: CardDTO = {
         title: formData.get("title")?.toString(),
         cardType: "GLOBAL_TEMPLATE",
     };
 
-    const res = await fetch("http://localhost:8080/api/cards", {
+    const res = await fetch(`${BACKEND_URL}/api/cards`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

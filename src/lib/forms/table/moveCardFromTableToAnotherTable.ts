@@ -1,7 +1,9 @@
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function moveCardFormTableToAnotherTable(originTableId: number, cardId: number, destinyTableId:number, newPosition: number) {
-  const createTableRes = await fetch(`http://localhost:8080/api/tables/${originTableId}/cards/${cardId}?newTable=${destinyTableId}&position=${newPosition}`, {
+  const createTableRes = await fetch(`${BACKEND_URL}/api/tables/${originTableId}/cards/${cardId}?newTable=${destinyTableId}&position=${newPosition}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

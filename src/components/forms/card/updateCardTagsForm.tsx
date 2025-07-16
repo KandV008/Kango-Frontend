@@ -17,6 +17,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CardContext } from "@/components/contexts/cardContext";
 import { TagListContext } from "@/components/contexts/tagListContext";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   dashboardId?: string;
 }
@@ -78,7 +80,7 @@ function UpdateCardTagsForm({ dashboardId }: componentProps) {
 
     for (const tag of tagsToRemove) {
       const response = await fetch(
-        `http://localhost:8080/api/cards/${card.id}/tags`,
+        `${BACKEND_URL}/api/cards/${card.id}/tags`,
         {
           method: "DELETE",
           headers: {
@@ -110,7 +112,7 @@ function UpdateCardTagsForm({ dashboardId }: componentProps) {
 
     for (const tagId of newTags) {
       const response = await fetch(
-        `http://localhost:8080/api/cards/${card.id}/tags`,
+        `${BACKEND_URL}/api/cards/${card.id}/tags`,
         {
           method: "POST",
           headers: {

@@ -14,6 +14,9 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { toast } from "sonner";
+
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   check: CheckProps;
   cardId: string;
@@ -24,7 +27,7 @@ function CheckComponent({ check, cardId, onRemoved }: componentProps) {
   const removeCheckAction = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/cards/${cardId}/checks`,
+        `${BACKEND_URL}/api/cards/${cardId}/checks`,
         {
           method: "DELETE",
           headers: {
@@ -54,7 +57,7 @@ function CheckComponent({ check, cardId, onRemoved }: componentProps) {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/cards/${cardId}/checks`,
+        `${BACKEND_URL}/api/cards/${cardId}/checks`,
         {
           method: "PUT",
           headers: {

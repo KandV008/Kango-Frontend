@@ -50,6 +50,8 @@ const items = [
   },
 ];
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   dashboard: DashboardEntity;
   onDelete: () => void;
@@ -94,7 +96,7 @@ function Dashboard({ dashboard, onDelete }: componentProps) {
   const deleteDashboardAction = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/dashboards/${dashboard.id}`,
+        `${BACKEND_URL}/api/dashboards/${dashboard.id}`,
         {
           method: "DELETE",
         }

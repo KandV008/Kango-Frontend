@@ -29,6 +29,8 @@ import { useEffect, useState } from "react";
 import { DashboardEntity } from "@/model/dashboard/dashboard";
 import UpdateDashboardNameForm from "../forms/dashboard/updateDashboardNameForm";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   toggleSideBar: () => void;
 }
@@ -44,7 +46,7 @@ function Header({ toggleSideBar }: componentProps) {
     const fetchDashboard = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/dashboards/${id}`
+          `${BACKEND_URL}/api/dashboards/${id}`
         );
 
         if (!response.ok) {

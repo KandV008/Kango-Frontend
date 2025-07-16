@@ -1,7 +1,9 @@
 import { DashboardEntity } from "@/model/dashboard/dashboard";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function getDashboardList(setDashboardList: (dashboardList: DashboardEntity[]) => void) {
-    fetch("http://localhost:8080/api/dashboards")
+    fetch(`${BACKEND_URL}/api/dashboards`)
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Error en la petición: " + response.status);

@@ -10,6 +10,8 @@ import { useContext, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CardContext } from "@/components/contexts/cardContext";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 function UpdateCardColorForm() {
   const { card, setCard } = useContext(CardContext);
 
@@ -23,7 +25,7 @@ function UpdateCardColorForm() {
       };
 
       const response = await fetch(
-        `http://localhost:8080/api/cards/${card.id}/color`,
+        `${BACKEND_URL}/api/cards/${card.id}/color`,
         {
           method: "PUT",
           headers: {

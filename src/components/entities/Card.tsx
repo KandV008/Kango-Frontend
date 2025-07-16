@@ -24,6 +24,8 @@ import { Badge } from "../ui/badge";
 import { CardListContext } from "../contexts/cardList";
 import { CardContext } from "../contexts/cardContext";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   currentCard: CardEntity;
   dashboardId?: string;
@@ -43,7 +45,7 @@ function Card({ currentCard, dashboardId }: componentProps) {
   const deleteCarddAction = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/cards/${card.id}`,
+        `${BACKEND_URL}/api/cards/${card.id}`,
         {
           method: "DELETE",
         }

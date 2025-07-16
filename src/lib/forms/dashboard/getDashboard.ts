@@ -1,10 +1,12 @@
 import { DashboardEntity } from "@/model/dashboard/dashboard";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function getDashboard(
     id: string, 
 ) {
     const response = await fetch(
-        `http://localhost:8080/api/dashboards/${id}`
+        `${BACKEND_URL}/api/dashboards/${id}`
     );
 
     if (!response.ok) {

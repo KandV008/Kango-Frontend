@@ -2,6 +2,8 @@ import type { CardDTO } from "@/model/card/cardDTO";
 import { TableEntity } from "@/model/table/table";
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function createCard(formData: FormData) {
     const tableId = formData.get("table_id")?.toString();
     const cardDTO: CardDTO = {
@@ -9,7 +11,7 @@ export default async function createCard(formData: FormData) {
         cardType: "NORMAL",
     };
 
-    const createCardRes = await fetch("http://localhost:8080/api/cards", {
+    const createCardRes = await fetch(`${BACKEND_URL}/api/cards`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -25,7 +27,7 @@ export default async function createCard(formData: FormData) {
     const createdCard = await createCardRes.json();
     const cardId = createdCard.id;
 
-    const addCardRes = await fetch(`http://localhost:8080/api/tables/${tableId}/cards`, {
+    const addCardRes = await fetch(`${BACKEND_URL}/api/tables/${tableId}/cards`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -4,6 +4,8 @@ import Card from "../entities/Card";
 import { DashboardEntity } from "@/model/dashboard/dashboard";
 import { CardListContext } from "../contexts/cardList";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   dashboardId: string | undefined;
 }
@@ -18,7 +20,7 @@ function TemplateCardList({ dashboardId }: componentProps) {
   }, [globalCardList, localCardList]);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/global-template-cards`)
+    fetch(`${BACKEND_URL}/api/global-template-cards`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error en la petición: " + response.status);
@@ -38,7 +40,7 @@ function TemplateCardList({ dashboardId }: componentProps) {
     const fetchDashboard = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/dashboards/${dashboardId}`
+          `${BACKEND_URL}/api/dashboards/${dashboardId}`
         );
 
         if (!response.ok) {

@@ -10,6 +10,8 @@ import { CardListContext } from "../contexts/cardList";
 import { Input } from "../ui/input";
 import copyCardTemplate from "@/lib/forms/card/copyCardTemplate";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   dashboardId: string | undefined;
   tableId: string | undefined;
@@ -25,7 +27,7 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
   }, [globalCardList, localCardList]);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/global-template-cards`)
+    fetch(`${BACKEND_URL}/api/global-template-cards`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error en la petición: " + response.status);
@@ -44,7 +46,7 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
     const fetchDashboard = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/dashboards/${dashboardId}`
+          `${BACKEND_URL}/api/dashboards/${dashboardId}`
         );
 
         if (!response.ok) {

@@ -1,6 +1,8 @@
 import type { TagDTO } from "@/model/tag/tagDTO";
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function createLocalTag(formData: FormData) {
     const dashboardId = formData.get("dashboard_id")?.toString();
     const tagDTO: TagDTO = {
@@ -10,7 +12,7 @@ export default async function createLocalTag(formData: FormData) {
 
     };
 
-    const createTagRes = await fetch("http://localhost:8080/api/tags", {
+    const createTagRes = await fetch(`${BACKEND_URL}/api/tags`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -26,7 +28,7 @@ export default async function createLocalTag(formData: FormData) {
     const createdTag = await createTagRes.json();
     const tagId = createdTag.id;
 
-    const res = await fetch(`http://localhost:8080/api/dashboards/${dashboardId}/tags`, {
+    const res = await fetch(`${BACKEND_URL}/api/dashboards/${dashboardId}/tags`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

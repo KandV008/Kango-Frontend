@@ -1,10 +1,12 @@
 import { toast } from "sonner";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default async function moveCardListFromTableToAnotherTable(formData: FormData) {
     const destinyTable = formData.get("destination-table")?.toString();
     const originTable = formData.get("origin-table")?.toString();
 
-  const createTableRes = await fetch(`http://localhost:8080/api/tables/${originTable}/cards?newTable=${destinyTable}`, {
+  const createTableRes = await fetch(`${BACKEND_URL}/api/tables/${originTable}/cards?newTable=${destinyTable}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

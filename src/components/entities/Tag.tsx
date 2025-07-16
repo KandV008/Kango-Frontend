@@ -30,6 +30,8 @@ import { useContext, useState } from "react";
 import { TagListContext } from "../contexts/tagListContext";
 import { TagContext } from "../contexts/tagContext";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 interface componentProps {
   tag: TagEntity;
 }
@@ -44,7 +46,7 @@ function Tag({ tag: currentTag }: componentProps) {
 
   const deleteTagAction = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/tags/${tag.id}`, {
+      const response = await fetch(`${BACKEND_URL}/api/tags/${tag.id}`, {
         method: "DELETE",
       });
 
