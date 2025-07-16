@@ -11,7 +11,7 @@ services:
       - db-data:/var/lib/postgresql/data
 
   backend:
-    image: kango-backend:latest
+    image: kandv/kango-backend:latest
     ports:
       - "8080:8080"
     depends_on:
@@ -22,14 +22,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: secret
 
   frontend:
-    build:
-      context: .
+    image: kandv/kango-frontend:latest
     ports:
       - "4173:4173"
     depends_on:
       - backend
-    environment:
-      VITE_API_URL: http://backend:8080
 
 volumes:
   db-data:
