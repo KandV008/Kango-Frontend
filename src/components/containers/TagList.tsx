@@ -30,7 +30,7 @@ function TagList({ dashboardId }: componentProps) {
 
   return (
     <TagListContext.Provider value={{ tagList: allTags, setTagList }}>
-      <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden h-96">
+      <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden max-h-96">
         {allTags && allTags.length !== 0 ? (
           <div className="grid w-full gap-1 overflow-y-auto sm:gap-2 h-max">
             {allTags.map((tag) => (

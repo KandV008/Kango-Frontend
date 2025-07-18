@@ -3,7 +3,7 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Upload } from "lucide-react";
 import createTable from "@/lib/forms/table/createTable";
-import { TableListContext } from "@/components/contexts/tableList";
+import { TableListContext } from "@/components/contexts/tableListContext";
 import { useContext } from "react";
 
 interface componentProps {

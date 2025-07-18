@@ -1,7 +1,7 @@
 import Header from "@/components/common/Header";
 import SideBar from "@/components/common/SideBar";
 import TableList from "@/components/containers/TableList";
-import { TableListContext } from "@/components/contexts/tableList";
+import { TableListContext } from "@/components/contexts/tableListContext";
 import getDashboard from "@/lib/forms/dashboard/getDashboard";
 import { TableEntity } from "@/model/table/table";
 import { useEffect, useState } from "react";
@@ -39,7 +39,7 @@ function DashboardPage() {
         />
         <div className="flex flex-col w-full overflow-hidden">
           <Header toggleSideBar={() => setSidebarOpen((prev) => !prev)} />
-          <div className="h-full min-w-full overflow-x-scroll">
+          <div className="h-full min-w-full overflow-x-auto">
             <TableList />
           </div>
         </div>

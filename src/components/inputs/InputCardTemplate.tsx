@@ -1,14 +1,14 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CardEntity } from "@/model/card/card";
 import { DashboardEntity } from "@/model/dashboard/dashboard";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Copy } from "lucide-react";
 import Card from "../entities/Card";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { CardListContext } from "../contexts/cardList";
 import { Input } from "../ui/input";
 import copyCardTemplate from "@/lib/forms/card/copyCardTemplate";
+import { CardListContext } from "../contexts/cardListContext";
 
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 
@@ -20,10 +20,11 @@ interface componentProps {
 export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
   const [globalCardList, setGlobalCardList] = useState<CardEntity[]>([]);
   const [localCardList, setLocalCardList] = useState<CardEntity[]>([]);
-  const [allTemplates, setCardList] = useState<CardEntity[]>([]);
+  const [allTemplates, setTemplateList] = useState<CardEntity[]>([]);
+  const { setCardList } = useContext(CardListContext)
 
   useEffect(() => {
-    setCardList([...globalCardList, ...localCardList]);
+    setTemplateList([...globalCardList, ...localCardList]);
   }, [globalCardList, localCardList]);
 
   useEffect(() => {
@@ -76,7 +77,7 @@ export function InputCardTemplate({ dashboardId, tableId }: componentProps) {
   };
 
   return (
-    <CardListContext.Provider value={{ cardList: allTemplates, setCardList }}>
+    <CardListContext.Provider value={{ cardList: allTemplates, setCardList: setTemplateList }}>
       <form
         className="flex flex-col gap-3"
         action={createCardUsingATemplateAction}

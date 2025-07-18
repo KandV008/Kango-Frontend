@@ -21,8 +21,8 @@ import AboutCard from "../about/AboutCard";
 import { Separator } from "../ui/separator";
 import { getFormattedDate } from "@/lib/utils";
 import { Badge } from "../ui/badge";
-import { CardListContext } from "../contexts/cardList";
 import { CardContext } from "../contexts/cardContext";
+import { CardListContext } from "../contexts/cardListContext";
 
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 

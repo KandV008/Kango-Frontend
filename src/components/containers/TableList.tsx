@@ -3,7 +3,7 @@ import { DropZone } from "../inputs/DropZone";
 import { useCallback, useContext, useEffect } from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import updateTablePositionFromDashboard from "@/lib/forms/dashboard/updateTablePositionFromDashboard";
-import { TableListContext } from "../contexts/tableList";
+import { TableListContext } from "../contexts/tableListContext";
 import getDashboard from "@/lib/forms/dashboard/getDashboard";
 import { useParams } from "react-router-dom";
 
