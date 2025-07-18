@@ -65,7 +65,7 @@ function UpdateCardCheckForm() {
       setCurrentCheks((prev) => [...prev, check]);
       setCard({
         ...card,
-        checks: currentChecks,
+        checks: [...currentChecks, check],
       });
     } catch (error) {
       console.error("Error adding check to card:", error);
