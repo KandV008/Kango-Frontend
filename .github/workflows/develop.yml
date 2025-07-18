@@ -1,15 +1,19 @@
-name: Continuous Delivery
+name: Continuous Integration
 
 on: 
   push:
     branches: 
-      - main
+      - develop
     paths-ignore:
       - README.md
       - .gitattributes
       - .gitignore
       - compose.yaml
       - docs/**
+
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   build:
