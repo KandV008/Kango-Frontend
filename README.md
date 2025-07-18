@@ -8,7 +8,9 @@ This README.md will consist of the manual for installing the application with do
 
 Kango is an application that allows you to manage Kanban boards on your local machine. It is oriented for a more casual use, without having agile development functionalities. If you want to have a Kanban board to manage your daily life or a personal project, this application is ideal for having the essential functionality.
 
-[![Kango - Preview](https://youtu.be/-VS518NoluE/maxresdefault.jpg)](https://youtu.be/-VS518NoluE)
+Click in the **image** to see preview of the application:
+
+[![Kango - Preview](public/thumbnail.png)](https://youtu.be/-VS518NoluE)
 
 
 ## Table of Content
