@@ -57,9 +57,9 @@ function AttachedFileList({ dashboardId }: componentProps) {
   }, [dashboardId]);
 
   return (
-    <section className="flex flex-col flex-wrap items-center justify-center gap-5 px-5 size-full ">
+    <section className="flex flex-col items-center justify-start flex-grow w-full gap-5 px-5 max-h-96">
       {attachedFiles && attachedFiles.length !== 0 ? (
-        <>
+          <article className="grid w-full gap-1 overflow-y-auto sm:gap-2 h-max">
           {attachedFiles.map((file, index) => (
             <AttachedFile
               key={"attached-file-" + index}
@@ -68,7 +68,7 @@ function AttachedFileList({ dashboardId }: componentProps) {
               onRemove={() => removeFile(file, attachedFiles)}
             />
           ))}
-        </>
+        </article>
       ) : (
         <em className="w-full text-center ">
           This Dashboard doesn't have any attached files.

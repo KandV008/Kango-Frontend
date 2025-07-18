@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CardEntity } from "@/model/card/card";
 import Card from "../entities/Card";
 import { DashboardEntity } from "@/model/dashboard/dashboard";
-import { CardListContext } from "../contexts/cardList";
+import { CardListContext } from "../contexts/cardListContext";
 
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 
@@ -63,7 +63,7 @@ function TemplateCardList({ dashboardId }: componentProps) {
 
   return (
     <CardListContext.Provider value={{ cardList: allTemplates, setCardList }}>
-      <section className="flex flex-col justify-start flex-grow w-full gap-3 overflow-x-hidden h-96">
+      <section className="flex flex-col justify-start w-full gap-3 overflow-x-hidden max-h-96">
         {allTemplates && allTemplates.length !== 0 ? (
           <article className="grid w-full gap-1 overflow-y-auto sm:gap-2 h-max">
             {allTemplates.map((card) => (

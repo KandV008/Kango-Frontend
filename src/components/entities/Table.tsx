@@ -52,8 +52,8 @@ import { InputCardTemplate } from "../inputs/InputCardTemplate";
 import invariant from "tiny-invariant";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import UpdateTableNameForm from "../forms/table/updateTableNameForm";
-import { TableListContext } from "../contexts/tableList";
-import { CardListContext } from "../contexts/cardList";
+import { TableListContext } from "../contexts/tableListContext";
+import { CardListContext } from "../contexts/cardListContext";
 import { CardEntity } from "@/model/card/card";
 import { sortCardList, valueOfCardListSort } from "@/model/enums/cardListSort";
 import getDashboard from "@/lib/forms/dashboard/getDashboard";
@@ -468,7 +468,7 @@ function Table({ table }: componentProps) {
             </Dialog>
           </article>
           {/* All Cards */}
-          <article className="grid w-full gap-1 overflow-y-scroll sm:gap-2 h-max">
+          <article className="grid w-full gap-1 overflow-y-auto sm:gap-2 h-max">
             <DropZone zone={0} destination={table.id} type={"CARD"} />
             {sortedCardList.map((card) => (
               <div className="grid gap-1 sm:gap-2" key={"card-" + card.id}>
