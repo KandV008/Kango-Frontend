@@ -21,6 +21,7 @@ export default async function getAllTags(dashboardId: string | undefined, setGlo
     });
 
   const fetchDashboard = async () => {
+    console.log("HERE", dashboardId)
     try {
       const response = await fetch(
         `${BACKEND_URL}/api/dashboards/${dashboardId}`
