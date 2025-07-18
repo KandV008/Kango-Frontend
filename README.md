@@ -1,4 +1,4 @@
-# Kango - Frontend
+# Kango, an auto-hosted Kanban - Frontend
 
 You are on the client side of the Kango software. If you wish to view the server side, [click here](https://github.com/KandV008/Kango-Backend) to redirect you to the repository.
 
@@ -8,14 +8,16 @@ This README.md will consist of the manual for installing the application with do
 
 Kango is an application that allows you to manage Kanban boards on your local machine. It is oriented for a more casual use, without having agile development functionalities. If you want to have a Kanban board to manage your daily life or a personal project, this application is ideal for having the essential functionality.
 
+[![Kango - Preview](https://youtu.be/-VS518NoluE/maxresdefault.jpg)](https://youtu.be/-VS518NoluE)
+
 
 ## Table of Content
 
 1. [Installation manual](#installation-manual)
-  a. [Steps](#steps)
-  b. [Configuration](#configuration)
-  c. [Back-end](#back-end)
-  d. [Front-end](#front-end)
+   1. [Steps](#steps)
+   2. [Configuration](#configuration)
+   3. [Back-end](#back-end)
+   4. [Front-end](#front-end)
 
 ## Installation manual
 
@@ -29,43 +31,50 @@ This section will explain how to install and use the Kango application on your l
 4. Go to the directory where the file was downloaded
 5. Open a terminal
 6. Run the next command:
+
 ```
   docker compose up -d
 ```
+
 7. Go to [http://localhost:4173/](http://localhost:4173/)
 8. Enjoy!
 
 If you want to stop the application:
 
-1. Go to the directory 
+1. Go to the directory
 2. Go to the directory where the file was downloaded
 3. Open a terminal
 4. Run the next command:
+
 ```
   docker compose down
 ```
 
 If you want to re-start the application:
 
-1. Go to the directory 
+1. Go to the directory
 2. Go to the directory where the file was downloaded
 3. Open a terminal
 4. Run the next command:
+
 ```
   docker compose up -d
 ```
+
 5. Go to [http://localhost:4173/](http://localhost:4173/)
 
 ### Configuration
 
 In order to install the application you need the following:
-- [Docker](https://docs.docker.com/get-started/get-docker/) 
+
+- [Docker](https://docs.docker.com/get-started/get-docker/)
 
 If you want to test each side of the application with the tools that were used for development, the following are required:
+
 - Back-End:
   - [JDK 21](https://www.oracle.com/es/java/technologies/downloads/#java21)
   - An IDE, e.g. [IntelliJ IDEA](https://www.jetbrains.com/idea/)
-  - [PostgreSQL](https://www.postgresql.org/download/)
+  - [PostgreSQL](https://www.postgresql.org/download/) (The repository contains a compose.yaml with the docker of the database, if you don't want to install the software)
 - Front-End:
   - [Node.JS v20 or higher](https://nodejs.org/en/download)
   - An IDE, e.g. [Visual Studio Code](https://code.visualstudio.com/Download)
@@ -79,7 +88,7 @@ For the back-end you need the `kango-backend` image and a `postgreSQL` image.
 
 To use the server side with docker it is only necessary to have the following services in the docker compose:
 
-``` yaml
+```yaml
 services:
   db:
     image: postgres:16-alpine
@@ -115,11 +124,10 @@ For the front-end you need the `kango-frontend` image.
 
 To use the client side with docker it is only necessary to have the following service in the docker compose:
 
-``` yaml
+```yaml
 services:
   frontend:
     image: kandv/kango-frontend:latest
     ports:
       - "4173:4173"
 ```
-
